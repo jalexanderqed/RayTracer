@@ -2,8 +2,11 @@
 #define INTERSECTION_PRIMITIVES_H
 
 #define _USE_MATH_DEFINES
+#define GLM_EXT_INCLUDED
+#define GLM_ENABLE_EXPERIMENTAL
 
-#include "glitter.h"
+#include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
 #include "scene_io.h"
 #include <cmath>
 #include <algorithm>

@@ -1,10 +1,14 @@
 #ifndef SCENE_CAMERA_H
 #define SCENE_CAMERA_H
 
-#include "glitter.h"
+#include <glm/glm.hpp>
+#include <scene_io.h>
+#include <ray_tracer.h>
 
 extern float focalLength;
 extern float globalFocalDistance;
+extern const int IMAGE_WIDTH;
+extern const int IMAGE_HEIGHT;
 
 class SceneCamera {
 public:
@@ -31,8 +35,8 @@ public:
 		focalDistance = globalFocalDistance;
 		vertFov = camera->verticalFOV;
 		horizFov = (((float)IMAGE_WIDTH) / IMAGE_HEIGHT) * vertFov;
-		screenVert = focalLength * tan(vertFov / 2) * up;
-		screenHoriz = focalLength * tan(horizFov / 2) * right;
+		screenVert = focalLength * (float)tan(vertFov / 2.0f) * up;
+		screenHoriz = focalLength * (float)tan(horizFov / 2.0f) * right;
 	}
 };
 

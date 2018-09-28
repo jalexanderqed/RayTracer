@@ -3,8 +3,8 @@
 
 #define _USE_MATH_DEFINES
 
-#include "glitter.h"
-
+#include <glm/glm.hpp>
+#include "ray_tracer.h"
 #include "util.h"
 #include "Intersections.h"
 #include "SceneCamera.h"
@@ -28,8 +28,6 @@ extern float lensSide;
 extern int numThreads;
 extern bool complexColorShaders;
 extern unordered_map<const ObjIO*, int> sphereMap;
-
-extern CImage texture1;
 
 extern list<ObjBound*> boundBoxes;
 

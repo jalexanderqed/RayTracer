@@ -1,7 +1,8 @@
 #ifndef SCENE_STRUCTURE_H
 #define SCENE_STRUCTURE_H
 
-#include "glitter.h"
+#include <glm/glm.hpp>
+#include <ray_tracer.h>
 #include "util.h"
 #include "scene_io.h"
 #include "BoundingBox.h"

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CAMERA_HPP
+#define CAMERA_HPP
 
 // Std. Includes
 #include <vector>
@@ -6,7 +7,7 @@
 // GL Includes
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
+#include <glad/glad.h>
 
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
@@ -130,3 +131,5 @@ private:
 		this->Up = glm::normalize(glm::cross(this->Right, this->Front));
 	}
 };
+
+#endif

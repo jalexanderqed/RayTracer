@@ -1,13 +1,15 @@
 #ifndef INTERSECTIONS_H
 #define INTERSECTIONS_H
 
-#include "glitter.h"
+#include <glm/glm.hpp>
+#include <ray_tracer.h>
 #include "util.h"
 #include "scene_io.h"
 #include <iostream>
 #include <cmath>
 #include "IntersectionPrimitives.h"
 #include "ObjBound.h"
+#include <list>
 
 using namespace std;
 

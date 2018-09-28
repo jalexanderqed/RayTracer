@@ -1,9 +1,10 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include "glitter.h"
+#include <glm/glm.hpp>
 #include <algorithm>
 #include "scene_io.h"
+#include "ray_tracer.h"
 
 extern float EPSILON;
 

@@ -2,7 +2,7 @@
 #define BOUNDING_BOX_H
 
 #include <algorithm>
-#include "glitter.h"
+#include <glm/glm.hpp>
 #include "scene_io.h"
 #include "IntersectionPrimitives.h"
 

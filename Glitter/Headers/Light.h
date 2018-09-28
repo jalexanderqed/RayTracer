@@ -1,7 +1,8 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#include "glitter.h"
+#include <glm/glm.hpp>
+#include "scene_io.h"
 
 class Light {
 public:

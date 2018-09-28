@@ -18,9 +18,9 @@ glm::vec3 reflect(const glm::vec3& out, const glm::vec3& normal) {
 
 glm::vec3 refract(const glm::vec3& out, const glm::vec3& normal, float oldIR, float newIR) {
 	float dotProd = glm::dot(out, normal);
-	glm::vec3 outNormal = dotProd < 0 ? -1 * normal : normal;
+	glm::vec3 outNormal = dotProd < 0 ? -1.0f * normal : normal;
 
-	glm::vec3 in = -1 * out;
+	glm::vec3 in = -1.0f * out;
 	float ratio = (oldIR / newIR);
 	float cosine = glm::dot(outNormal, in);
 	float sin2 = ratio * ratio * (1.0f - cosine * cosine);

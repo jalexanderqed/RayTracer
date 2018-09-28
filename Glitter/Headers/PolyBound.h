@@ -5,6 +5,7 @@
 #include "scene_io.h"
 #include <list>
 #include <iostream>
+#include <glm/glm.hpp>
 
 using namespace std;
 

@@ -31,6 +31,7 @@ MaterialIO getComplexMaterial(const IntersectionPoint& iPoint) {
 			else u += rotate;
 		}
 
+		/*
 		COLORREF color = texture1.GetPixel((int)(u * texture1.GetWidth()), (int)(v * texture1.GetHeight()));
 		if (color == CLR_INVALID) {
 			cerr << "Could not load color value at " << 
@@ -42,6 +43,8 @@ MaterialIO getComplexMaterial(const IntersectionPoint& iPoint) {
 		}
 
 		glm::vec3 vecColor(GetRValue(color) / 255.0f, GetGValue(color) / 255.0f, GetBValue(color) / 255.0f);
+		 */
+		glm::vec3 vecColor;
 		MaterialIO mat = dupMaterial(iPoint.object->material);
 		float diffColor = (glm::normalize(vecColor).b > 0.5f) ? 0.0f : 1.0f;
 		if (sphereMap.count(iPoint.object) > 0) {
@@ -115,7 +118,7 @@ glm::vec3 lightContrib(const glm::vec3& lightColor,
 	float shiny, float kTrans) {
 
 	glm::vec3 contrib;
-	glm::vec3 outDir = -1 * inDir;
+	glm::vec3 outDir = inDir * -1.0f;
 	float diffuseContrib = max(0.0f, glm::dot(normal, dirToLight));
 	contrib += (1.0f - kTrans) * diffuseContrib * diffuseColor;
 
@@ -156,7 +159,7 @@ glm::vec3 calcAllLights(const IntersectionPoint& iPoint,
 			dist2 = glm::length2(dirToLight);
 			break;
 		case DIRECTIONAL_LIGHT:
-			dirToLight = -1 * l.direction;
+			dirToLight = -1.0f * l.direction;
 			break;
 		}
 
@@ -198,7 +201,7 @@ glm::vec3 shadeIntersect(const IntersectionPoint& iPoint,
 	int inside,
 	int depth) {
 
-	glm::vec3 outVec = -1 * inVec;
+	glm::vec3 outVec = -1.0f * inVec;
 	MaterialIO interMaterial = getMaterial(iPoint);
 
 	glm::vec3 color = calcAllLights(iPoint, interMaterial, inVec, scene);
@@ -263,7 +266,7 @@ glm::vec3 tracePixelVec(const glm::vec3& firstVec, const glm::vec3& camPos, Scen
 	}
 }
 
-DWORD WINAPI renderLoop(void* params) {
+int renderLoop(void* params) {
 	ThreadData *data = (ThreadData*)params;
 	SceneIO* scene = data->scene;
 	SceneCamera cam(scene->camera);
@@ -335,6 +338,11 @@ void jacksRenderScene(SceneIO* scene) {
 		lights.push_back(Light(light));
 	}
 
+	numThreads = 1;
+	ThreadData data = { 0, scene };
+	renderLoop(&data);
+
+	/*
 	if (useAcceleration && numThreads > 1) {
 		ThreadData* data = new ThreadData[numThreads];
 		HANDLE* threads = new HANDLE[numThreads];
@@ -369,4 +377,5 @@ void jacksRenderScene(SceneIO* scene) {
 		ThreadData data = { 0, scene };
 		renderLoop(&data);
 	}
+	 */
 }

@@ -69,7 +69,7 @@ SceneIO *readScene(const char *filename) {
 	FILE *fp;
 	char format[50], type[20];
 	
-	fopen_s(&fp, filename, "rb");
+	fp = fopen(filename, "rb");
 	SceneIO *scene = NULL;
 
 	if (fp == NULL) {
@@ -569,7 +569,7 @@ read_objectA(ObjIO *obj, FILE *fp)
       obj->name = NULL;
     } else {
       word[strlen(word)-1] = '\0';	/* eat trailing quote */
-      obj->name = _strdup(word+1);	/* eat leading quote */
+      obj->name = strdup(word+1);	/* eat leading quote */
     }
   }
   CHECK(1,fscanf(fp," numMaterials %ld",&obj->numMaterials));

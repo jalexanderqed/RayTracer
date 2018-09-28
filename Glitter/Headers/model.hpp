@@ -1,4 +1,6 @@
-#pragma once
+#ifndef MODEL_HPP
+#define MODEL_HPP
+
 // Std. Includes
 #include <string>
 #include <fstream>
@@ -11,7 +13,7 @@ using namespace std;
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <soil/soil.h>
+#include <SOIL/SOIL.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -232,3 +234,5 @@ GLint TextureFromFile(const char* path, string directory, bool gamma)
 	SOIL_free_image_data(image);
 	return textureID;
 }
+
+#endif

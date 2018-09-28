@@ -8,8 +8,61 @@
 // Standard Headers
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
+
+#include "ray_tracer.h"
+#include "Tracer.h"
+#include "SceneStructure.h"
+#include "Timer.h"
 
 int main(int argc, char * argv[]) {
+    srand(time(NULL));
+    Timer total_timer;
+    Timer accelTimer;
+    Timer renderTimer;
+    total_timer.startTimer();
+
+    if (argc < 2) {
+        cout << "Usage:\tBasicRayTracer.exe <input file> [<output file>]" << endl;
+        exit(1);
+    }
+/*
+	if (argc >= 3) {
+		fileName = CA2W(argv[2]);
+	}
+	else {
+		fileName = _T("output.png");
+	}
+
+	if (complexColorShaders || complexIntersectShaders) {
+		HRESULT success = texture1.Load(CA2W("earth.jpg"));
+		if (success != S_OK) {
+			cerr << "Error loading texture 1: " << success << endl;
+			exit(1);
+		}
+	}
+ */
+
+    accelTimer.startTimer();
+    loadScene(argv[1]);
+    accelTimer.stopTimer();
+    fprintf(stderr, "Scene-building time: %.5lf secs\n", accelTimer.getTime());
+
+    renderTimer.startTimer();
+    render();
+    renderTimer.stopTimer();
+    fprintf(stderr, "Rendering time: %.5lf secs\n", renderTimer.getTime());
+
+    if (scene != NULL) {
+        deleteScene(scene);
+    }
+
+    jacksCleanupBounds();
+
+    total_timer.stopTimer();
+    fprintf(stderr, "Total time: %.5lf secs\n\n", total_timer.getTime());
+
+    if(true) return 0;
 
     // Load GLFW and Create a Window
     glfwInit();

@@ -1,51 +1,30 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+#include <chrono>
 
+using std::chrono::high_resolution_clock;
 
 class Timer {
 private:
-	LARGE_INTEGER freq;
-	LARGE_INTEGER t_start, t_end;
-	LARGE_INTEGER total_time;
+    high_resolution_clock::time_point t_start, t_end;
+	std::chrono::microseconds total_time;
 public:
-	Timer() {
-		 QueryPerformanceFrequency(&freq);
-	}
-	
-	void resetTimer(void) {
-		total_time.QuadPart = 0;
-	}
-
-	void unpauseTimer(void) {
-		QueryPerformanceCounter(&t_start);
-	}
-
-	void pauseTimer(void) {
-		QueryPerformanceCounter(&t_end);
-		total_time.QuadPart += (t_end.QuadPart - t_start.QuadPart);
-	}
+	Timer() { }
 
 	void startTimer(void) {
-		QueryPerformanceCounter(&t_start);
+		t_start = high_resolution_clock::now();
 	}
 
 	void stopTimer(void) {
-		QueryPerformanceCounter(&t_end);
-		total_time.QuadPart = (t_end.QuadPart - t_start.QuadPart);
-	}
-
-	void printTime(void) {
-		fprintf(stderr,"%lf\n",((double) total_time.QuadPart) /((double) freq.QuadPart));
-		fflush(stderr);
+		t_end = high_resolution_clock::now();
+		total_time = std::chrono::duration_cast<std::chrono::milliseconds>(t_end - t_start);
 	}
 
 	double getTime(void) const{
-		return ((double) total_time.QuadPart) /((double) freq.QuadPart);
+		return total_time.count() / 1000.0;
 	}
-
 };
-
 
 
 #endif		/* TIMER_H */

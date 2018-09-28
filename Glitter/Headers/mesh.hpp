@@ -1,4 +1,6 @@
-#pragma once
+#ifndef MESH_HPP
+#define MESH_HPP
+
 // Std. Includes
 #include <string>
 #include <fstream>
@@ -144,4 +146,4 @@ private:
 	}
 };
 
-
+#endif

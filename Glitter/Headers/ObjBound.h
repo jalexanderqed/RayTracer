@@ -6,6 +6,7 @@
 #include "PolyBound.h"
 #include <list>
 #include "IntersectionPrimitives.h"
+#include <glm/glm.hpp>
 
 class ObjBound {
 public:
