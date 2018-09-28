@@ -1,41 +1,4 @@
-#include <cstdlib>
-#include <stdio.h>
-#include <iostream>
-#include <algorithm>
-#include "scene_io.h"
-#include "Timer.h"
-#include "util.h"
-#include "Tracer.h"
-#include <glm\glm.hpp>
-#include <glm\ext.hpp>
-#include "SceneStructure.h"
-#include <list>
-#include <unordered_map>
-#include "PolyBound.h"
-
-const int IMAGE_WIDTH = 1500;
-const int IMAGE_HEIGHT = 1500;
-float EPSILON = 0.00005f;
-const float EPS_FACTOR = 67000;
-
-int numThreads = 8;
-bool useAcceleration = true;
-bool complexColorShaders = false;
-bool complexIntersectShaders = false;
-
-const int SAMPLES_PER_PIXEL = 1;
-float lensSide = 5.0f;
-float focalLength = 0.01f;
-float globalFocalDistance = 2;
-
-unordered_map<const ObjIO*, int> sphereMap;
-
-using namespace std;
-
-float *image;
-
-SceneIO *scene = NULL;
-list<ObjBound*> boundBoxes;
+#include "ray_tracer.h"
 
 static void loadScene(char *name) {
 	/* load the scene into the SceneIO data structure using given parsing code */
@@ -120,55 +83,4 @@ inline void cross(const glm::vec3& v1, float* v2, float* res) {
 	res[0] = v1[1] * v2[2] - v1[2] * v2[1];
 	res[1] = v1[2] * v2[0] - v1[0] * v2[2];
 	res[2] = v1[0] * v2[1] - v1[1] * v2[0];
-}
-
-int main(int argc, char *argv[]) {
-
-	srand(time(NULL));
-	Timer total_timer;
-	Timer accelTimer;
-	Timer renderTimer;
-	total_timer.startTimer();
-
-	if (argc < 2) {
-		cout << "Usage:\tBasicRayTracer.exe <input file> [<output file>]" << endl;
-		exit(1);
-	}
-/*
-	if (argc >= 3) {
-		fileName = CA2W(argv[2]);
-	}
-	else {
-		fileName = _T("output.png");
-	}
-
-	if (complexColorShaders || complexIntersectShaders) {
-		HRESULT success = texture1.Load(CA2W("earth.jpg"));
-		if (success != S_OK) {
-			cerr << "Error loading texture 1: " << success << endl;
-			exit(1);
-		}
-	}
- */
-	
-	accelTimer.startTimer();
-	loadScene(argv[1]);
-	accelTimer.stopTimer();
-	fprintf(stderr, "Scene-building time: %.5lf secs\n", accelTimer.getTime());
-
-	renderTimer.startTimer();
-	render();
-	renderTimer.stopTimer();
-	fprintf(stderr, "Rendering time: %.5lf secs\n", renderTimer.getTime());
-
-	if (scene != NULL) {
-		deleteScene(scene);
-	}
-
-	jacksCleanupBounds();
-	
-	total_timer.stopTimer();
-	fprintf(stderr, "Total time: %.5lf secs\n\n", total_timer.getTime());
-	
-	return 0;
 }
