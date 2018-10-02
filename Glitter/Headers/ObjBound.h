@@ -22,7 +22,7 @@ public:
 
 	void split();
 
-	IntersectionPoint intersect(const glm::vec3& vec, const glm::vec3& origin);
+	IntersectionPoint intersect(const glm::vec3& vec, const glm::vec3& origin, SceneData& scene_data, RayTracerParams& scene_params);
 };
 
 #endif // !OBJ_BOUND_H

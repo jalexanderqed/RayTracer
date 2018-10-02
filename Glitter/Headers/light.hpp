@@ -2,6 +2,8 @@
 #define LIGHT_H
 
 #include <glad\glad.h>
+#include <glm/glm.hpp>
+#include "shader.hpp"
 
 #include <string>
 #include <sstream>

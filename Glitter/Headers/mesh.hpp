@@ -12,9 +12,6 @@ using namespace std;
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-extern bool useTextures;
-
-
 struct Vertex {
 	// Position
 	glm::vec3 Position;

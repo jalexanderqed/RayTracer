@@ -22,7 +22,7 @@ public:
 	}
 
 	double getTime(void) const{
-		return total_time.count() / 1000.0;
+		return total_time.count() / 1e6;
 	}
 };
 

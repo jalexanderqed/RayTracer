@@ -3,21 +3,13 @@
 
 #include <glm/glm.hpp>
 #include <algorithm>
+#include "tracer_structs.h"
 #include "scene_io.h"
 #include "ray_tracer.h"
 
-extern float EPSILON;
+void setPixel(int x, int y, const glm::vec3& color, SceneData scene_data, RayTracerParams scene_params);
 
-using namespace std;
-
-extern const int IMAGE_WIDTH;
-extern const int IMAGE_HEIGHT;
-
-extern float* image;
-
-void setPixel(int x, int y, const glm::vec3& color);
-
-glm::vec3 getPixel(int x, int y);
+glm::vec3 getPixel(int x, int y, SceneData scene_data, RayTracerParams scene_params);
 
 glm::vec3 reflect(const glm::vec3& out, const glm::vec3& normal);
 

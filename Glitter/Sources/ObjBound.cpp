@@ -34,11 +34,11 @@ void ObjBound::split() {
 	}
 }
 
-IntersectionPoint ObjBound::intersect(const glm::vec3& vec, const glm::vec3& origin) {
+IntersectionPoint ObjBound::intersect(const glm::vec3& vec, const glm::vec3& origin, SceneData& scene_data, RayTracerParams& scene_params) {
 	if (obj->type == SPHERE_OBJ) {
-		return intersectSphere(vec, origin, obj);
+		return intersectSphere(vec, origin, obj, scene_data, scene_params);
 	}
 	else {
-		return myPolyBound->intersect(vec, origin);
+		return myPolyBound->intersect(vec, origin, scene_data, scene_params);
 	}
 }

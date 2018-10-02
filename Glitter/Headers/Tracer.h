@@ -4,7 +4,7 @@
 #define _USE_MATH_DEFINES
 
 #include <glm/glm.hpp>
-#include "ray_tracer.h"
+#include <tracer_structs.h>
 #include "util.h"
 #include "Intersections.h"
 #include "SceneCamera.h"
@@ -17,25 +17,8 @@
 #include <algorithm>
 #include "SceneStructure.h"
 #include <unordered_map>
+#include <thread>
 
-using namespace std;
-
-extern const int IMAGE_WIDTH;
-extern const int IMAGE_HEIGHT;
-extern const int SAMPLES_PER_PIXEL;
-extern float EPSILON;
-extern float lensSide;
-extern int numThreads;
-extern bool complexColorShaders;
-extern unordered_map<const ObjIO*, int> sphereMap;
-
-extern list<ObjBound*> boundBoxes;
-
-void jacksRenderScene(SceneIO* scene);
-
-struct ThreadData {
-	int threadNum;
-	SceneIO* scene;
-};
+void jacksRenderScene(SceneData& scene_data, RayTracerParams& scene_params);
 
 #endif // !TRACER_H

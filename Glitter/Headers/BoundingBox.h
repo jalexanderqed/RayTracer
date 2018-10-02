@@ -6,8 +6,6 @@
 #include "scene_io.h"
 #include "IntersectionPrimitives.h"
 
-using namespace std;
-
 class BoundingBox {
 public:
 	glm::vec3 vMax;

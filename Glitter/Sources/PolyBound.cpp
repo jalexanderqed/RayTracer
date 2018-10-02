@@ -104,11 +104,11 @@ struct DistPolyPair {
 	PolyBound* poly;
 };
 
-IntersectionPoint PolyBound::intersect(const glm::vec3& vec, const glm::vec3& origin) {
+IntersectionPoint PolyBound::intersect(const glm::vec3& vec, const glm::vec3& origin, SceneData& scene_data, RayTracerParams& scene_params) {
 	IntersectionPoint finalPoint;
 	if (children.size() == 0) {
 		for (const PolygonIO* poly : polySet) {
-			PolyIntersectionPoint currPoint = intersectPoly(vec, origin, poly);
+			PolyIntersectionPoint currPoint = intersectPoly(vec, origin, poly, scene_params);
 			if (currPoint.poly != NULL && (finalPoint.object == NULL ||
 				glm::distance2(currPoint.position, origin) < glm::distance2(finalPoint.position, origin))) {
 				finalPoint = IntersectionPoint(currPoint.position, parentObject, currPoint);
@@ -152,7 +152,7 @@ IntersectionPoint PolyBound::intersect(const glm::vec3& vec, const glm::vec3& or
 		for (PolyBound* p : children) {
 			glm::vec3 interPoint;
 			if (p->mightIntersect(vec, origin, interPoint)) {
-				IntersectionPoint currPoint = p->intersect(vec, origin);
+				IntersectionPoint currPoint = p->intersect(vec, origin, scene_data, scene_params);
 				float currDist = currPoint.object == NULL ? 0 : glm::distance2(currPoint.position, origin);
 				if (currPoint.object != NULL && (finalPoint.object == NULL ||
 					currDist < finalDist)) {

@@ -2,7 +2,7 @@
 #define SCENE_STRUCTURE_H
 
 #include <glm/glm.hpp>
-#include <ray_tracer.h>
+#include "tracer_structs.h"
 #include "util.h"
 #include "scene_io.h"
 #include "BoundingBox.h"
@@ -10,10 +10,10 @@
 #include "PolyBound.h"
 #include "ObjBound.h"
 
-extern list<ObjBound*> boundBoxes;
+void BuildAccelerators(SceneData& scene_data, RayTracerParams& params);
 
-void jacksBuildBounds(SceneIO* scene);
+void jacksBuildBounds(SceneData& scene_data);
 
-void jacksCleanupBounds();
+void jacksCleanupBounds(SceneData& scene_data);
 
 #endif // !SCENE_STRUCTURE_H

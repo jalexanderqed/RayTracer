@@ -1,15 +1,15 @@
 #include "util.h"
 
-void setPixel(int x, int y, const glm::vec3& color) {
-	*(image + 3 * IMAGE_WIDTH * y + x * 3 + 0) = color.r;
-	*(image + 3 * IMAGE_WIDTH * y + x * 3 + 1) = color.g;
-	*(image + 3 * IMAGE_WIDTH * y + x * 3 + 2) = color.b;
+void setPixel(int x, int y, const glm::vec3& color, SceneData scene_data, RayTracerParams scene_params) {
+	*(scene_data.image + 3 * scene_params.IMAGE_WIDTH * y + x * 3 + 0) = color.r;
+	*(scene_data.image + 3 * scene_params.IMAGE_WIDTH * y + x * 3 + 1) = color.g;
+	*(scene_data.image + 3 * scene_params.IMAGE_WIDTH * y + x * 3 + 2) = color.b;
 }
 
-glm::vec3 getPixel(int x, int y) {
-	return glm::vec3(*(image + 3 * IMAGE_WIDTH * y + x * 3 + 0),
-		*(image + 3 * IMAGE_WIDTH * y + x * 3 + 1),
-		*(image + 3 * IMAGE_WIDTH * y + x * 3 + 2));
+glm::vec3 getPixel(int x, int y, SceneData scene_data, RayTracerParams scene_params) {
+	return glm::vec3(*(scene_data.image + 3 * scene_params.IMAGE_WIDTH * y + x * 3 + 0),
+		*(scene_data.image + 3 * scene_params.IMAGE_WIDTH * y + x * 3 + 1),
+		*(scene_data.image + 3 * scene_params.IMAGE_WIDTH * y + x * 3 + 2));
 }
 
 glm::vec3 reflect(const glm::vec3& out, const glm::vec3& normal) {

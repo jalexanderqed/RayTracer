@@ -15,7 +15,23 @@
 #include "SceneStructure.h"
 #include "Timer.h"
 
-int main(int argc, char * argv[]) {
+int main(int argc, char *argv[]) {
+    RayTracerParams scene_params;
+    scene_params.IMAGE_WIDTH = 1500;
+    scene_params.IMAGE_HEIGHT = 1500;
+    scene_params.EPSILON = 0.00005f;
+    scene_params.EPS_FACTOR = 67000;
+    scene_params.numThreads = 8;
+    scene_params.useAcceleration = true;
+    scene_params.complexColorShaders = false;
+    scene_params.complexIntersectShaders = false;
+    scene_params.SAMPLES_PER_PIXEL = 1;
+    scene_params.lensSide = 5.0f;
+    scene_params.focalLength = 0.01f;
+    scene_params.globalFocalDistance = 2;
+
+    SceneData scene_data;
+
     srand(time(NULL));
     Timer total_timer;
     Timer accelTimer;
@@ -43,26 +59,29 @@ int main(int argc, char * argv[]) {
 	}
  */
 
+    scene_data.sceneName = argv[1];
     accelTimer.startTimer();
-    loadScene(argv[1]);
+    loadScene(scene_data);
+    updateRayTracerParams(scene_data, scene_params);
+    BuildAccelerators(scene_data, scene_params);
     accelTimer.stopTimer();
     fprintf(stderr, "Scene-building time: %.5lf secs\n", accelTimer.getTime());
 
     renderTimer.startTimer();
-    render();
+    render(scene_data, scene_params);
     renderTimer.stopTimer();
     fprintf(stderr, "Rendering time: %.5lf secs\n", renderTimer.getTime());
 
-    if (scene != NULL) {
-        deleteScene(scene);
+    if (scene_data.sceneGeometry != NULL) {
+        deleteScene(scene_data.sceneGeometry);
     }
 
-    jacksCleanupBounds();
+    jacksCleanupBounds(scene_data);
 
     total_timer.stopTimer();
     fprintf(stderr, "Total time: %.5lf secs\n\n", total_timer.getTime());
 
-    if(true) return 0;
+    if (true) return 0;
 
     // Load GLFW and Create a Window
     glfwInit();
@@ -96,6 +115,7 @@ int main(int argc, char * argv[]) {
         // Flip Buffers and Draw
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
-    }   glfwTerminate();
+    }
+    glfwTerminate();
     return EXIT_SUCCESS;
 }
