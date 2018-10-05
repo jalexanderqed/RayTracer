@@ -1,6 +1,7 @@
 #include <malloc.h>
 #include "scene_io.h"
 #include <string.h>
+#include <iostream>
 
 static SceneIO *readSceneA(FILE *fp);
 static SceneIO *readSceneB(FILE *fp);
@@ -761,6 +762,9 @@ read_materialA(MaterialIO *material, FILE *fp)
 		  &material->emissColor[1], &material->emissColor[2]));
   CHECK(1, fscanf(fp," shininess %g", &material->shininess));
   CHECK(1, fscanf(fp," ktran %g", &material->ktran));
+  if(material->ktran > 0.001){
+      std::cout << "ktran: " << material->ktran << std::endl;
+  }
   fscanf(fp," }");
 }
 

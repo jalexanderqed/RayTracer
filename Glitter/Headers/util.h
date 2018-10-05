@@ -15,4 +15,8 @@ glm::vec3 reflect(const glm::vec3& out, const glm::vec3& normal);
 
 glm::vec3 refract(const glm::vec3& out, const glm::vec3& normal, float oldIR, float newIR);
 
+int write_img(char* file_name, SceneData scene_data, RayTracerParams scene_params);
+
+int write_img(char* file_name, unsigned char* image, int width, int height);
+
 #endif

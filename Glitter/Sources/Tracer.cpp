@@ -44,7 +44,7 @@ MaterialIO getComplexMaterial(const IntersectionPoint &iPoint, SceneData &scene_
 
         glm::vec3 vecColor(GetRValue(color) / 255.0f, GetGValue(color) / 255.0f, GetBValue(color) / 255.0f);
          */
-        glm::vec3 vecColor;
+        glm::vec3 vecColor(0);
         MaterialIO mat = dupMaterial(iPoint.object->material);
         float diffColor = (glm::normalize(vecColor).b > 0.5f) ? 0.0f : 1.0f;
         if (scene_data.sphereMap.count(iPoint.object) > 0) {
@@ -114,10 +114,11 @@ glm::vec3 lightContrib(const glm::vec3 &lightColor,
                        const glm::vec3 &dirToLight, float distToLight,
                        const glm::vec3 &diffuseColor, const glm::vec3 &specularColor,
                        float shiny, float kTrans) {
-
-    glm::vec3 contrib;
+    glm::vec3 contrib(0);
+    glm::vec3();
     glm::vec3 outDir = inDir * -1.0f;
     float diffuseContrib = max(0.0f, glm::dot(normal, dirToLight));
+
     contrib += (1.0f - kTrans) * diffuseContrib * diffuseColor;
 
     glm::vec3 lightReflectDir = reflect(dirToLight, normal);
@@ -149,7 +150,7 @@ glm::vec3 calcAllLights(const IntersectionPoint &iPoint,
     glm::vec3 color = ambient * diffuse * (1.0f - interMaterial.ktran);
 
     for (Light l : lights) {
-        glm::vec3 dirToLight;
+        glm::vec3 dirToLight(0);
         float dist2;
 
         switch (l.sceneLight->type) {
@@ -173,9 +174,9 @@ glm::vec3 calcAllLights(const IntersectionPoint &iPoint,
         glm::vec3 seenColor = l.color;
         int count = 0;
         while (!(ip.object == NULL ||
+                 (ipMaterial = getMaterial(ip, scene_data, scene_params)).ktran < scene_params.EPSILON ||
                  (l.sceneLight->type != DIRECTIONAL_LIGHT &&
-                  glm::distance2(ip.position, l.position) > dist2) ||
-                 (ipMaterial = getMaterial(ip, scene_data, scene_params)).ktran < scene_params.EPSILON)) {
+                  glm::distance2(ip.position, l.position) > dist2))) {
             count++;
             glm::vec3 objColor(ipMaterial.diffColor[0],
                                ipMaterial.diffColor[1],
@@ -193,9 +194,20 @@ glm::vec3 calcAllLights(const IntersectionPoint &iPoint,
             (l.sceneLight->type != DIRECTIONAL_LIGHT &&
              glm::distance2(ip.position, l.position) > dist2) ||
             ipMaterial.ktran > scene_params.EPSILON) {
-            color += lightContrib(seenColor, normal, inVec, dirToLight,
-                                  l.sceneLight->type == DIRECTIONAL_LIGHT ? -1 : glm::distance(l.position, ip.position),
-                                  diffuse, specular, shiny, interMaterial.ktran);
+            if (l.color[0] > 0.5) {
+                scene_data.red_counted++;
+            }
+            if (l.color[1] > 0.5) {
+                scene_data.green_counted++;
+            }
+            if (l.color[2] > 0.5) {
+                scene_data.blue_counted++;
+            }
+            glm::vec3 light_contrib = lightContrib(seenColor, normal, inVec, dirToLight,
+                                                   l.sceneLight->type == DIRECTIONAL_LIGHT ? -1 : glm::distance(
+                                                           l.position, ip.position),
+                                                   diffuse, specular, shiny, interMaterial.ktran);
+            color += light_contrib;
         }
     }
     return color;
@@ -207,7 +219,6 @@ glm::vec3 shadeIntersect(const IntersectionPoint &iPoint,
                          int depth,
                          SceneData &scene_data,
                          RayTracerParams &scene_params) {
-
     glm::vec3 outVec = -1.0f * inVec;
     MaterialIO interMaterial = getMaterial(iPoint, scene_data, scene_params);
 
@@ -249,23 +260,24 @@ glm::vec3 shadeIntersect(const IntersectionPoint &iPoint,
         interMaterial.specColor[1] +
         interMaterial.specColor[2]
         > scene_params.EPSILON) {
-
         glm::vec3 spec(interMaterial.specColor[0],
                        interMaterial.specColor[1],
                        interMaterial.specColor[2]);
+
         glm::vec3 reflectDir = reflect(outVec, normal);
         IntersectionPoint reflectIntersect = intersectScene(reflectDir,
                                                             iPoint.position + scene_params.EPSILON * reflectDir,
                                                             scene_data,
                                                             scene_params);
         if (reflectIntersect.object != NULL) {
-            color += spec * shadeIntersect(
+            glm::vec3 reflect_result = shadeIntersect(
                     reflectIntersect,
                     reflectDir,
                     inside,
                     depth,
                     scene_data,
                     scene_params);
+            color += spec * reflect_result;
         }
     }
     return color;
@@ -286,7 +298,9 @@ glm::vec3 tracePixelVec(
     }
 }
 
-int renderLoop(SceneData scene_data, RayTracerParams scene_params, int threadNum) {
+int renderLoop(SceneData *scene_d, RayTracerParams *scene_p, int threadNum) {
+    SceneData &scene_data = *scene_d;
+    RayTracerParams &scene_params = *scene_p;
     SceneIO *scene = scene_data.sceneGeometry;
     SceneCamera cam(scene->camera, scene_params);
 
@@ -302,7 +316,7 @@ int renderLoop(SceneData scene_data, RayTracerParams scene_params, int threadNum
             glm::vec3 color(0);
             for (int subY = 0; subY < scene_params.SAMPLES_PER_PIXEL; subY++) {
                 for (int subX = 0; subX < scene_params.SAMPLES_PER_PIXEL; subX++) {
-                    glm::vec2 screenSpace;
+                    glm::vec2 screenSpace(0);
 
                     if (scene_params.SAMPLES_PER_PIXEL == 1) {
                         screenSpace.x = (pixX + 0.5f) / scene_params.IMAGE_WIDTH;
@@ -375,7 +389,7 @@ void jacksRenderScene(SceneData &scene_data, RayTracerParams &scene_params) {
         thread *threads = new thread[scene_params.numThreads];
 
         for (int i = 0; i < scene_params.numThreads; i++) {
-            threads[i] = thread(renderLoop, scene_data, scene_params, i);
+            threads[i] = thread(renderLoop, &scene_data, &scene_params, i);
         }
 
         for (int i = 0; i < scene_params.numThreads; i++) {
@@ -385,6 +399,6 @@ void jacksRenderScene(SceneData &scene_data, RayTracerParams &scene_params) {
         delete[] threads;
     } else {
         scene_params.numThreads = 1;
-        renderLoop(scene_data, scene_params, 0);
+        renderLoop(&scene_data, &scene_params, 0);
     }
 }

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.2)
 project(Glitter)
 
 option(GLFW_BUILD_DOCS OFF)
@@ -33,8 +33,7 @@ include_directories(Glitter/Headers/
         Glitter/Vendor/glad/include/
         Glitter/Vendor/glfw/include/
         Glitter/Vendor/glm/
-        Glitter/Vendor/stb/
-        Glitter/Vendor/soil/inc/)
+        Glitter/Vendor/stb/)
 
 file(GLOB VENDORS_SOURCES Glitter/Vendor/glad/src/glad.c)
 file(GLOB PROJECT_HEADERS Glitter/Headers/*.hpp
@@ -44,6 +43,7 @@ file(GLOB PROJECT_SHADERS Glitter/Shaders/*.comp
         Glitter/Shaders/*.frag
         Glitter/Shaders/*.geom
         Glitter/Shaders/*.vert)
+
 file(GLOB PROJECT_CONFIGS CMakeLists.txt
         Readme.md
         .gitattributes
@@ -59,7 +59,7 @@ add_definitions(-DGLFW_INCLUDE_NONE
         -DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\")
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
         ${PROJECT_SHADERS} ${PROJECT_CONFIGS}
-        ${VENDORS_SOURCES} Glitter/Sources/main.cpp Glitter/Headers/tracer_structs.h)
+        ${VENDORS_SOURCES} Glitter/Sources/main.cpp Glitter/Headers/gl_render_funcs.h)
 target_link_libraries(${PROJECT_NAME} assimp glfw
         ${GLFW_LIBRARIES} ${GLAD_LIBRARIES}
         BulletDynamics BulletCollision LinearMath)

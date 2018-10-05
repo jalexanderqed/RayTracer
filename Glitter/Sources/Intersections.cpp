@@ -81,14 +81,14 @@ MaterialIO interpolateMaterials(const glm::vec3 &p1, const glm::vec3 &p2, const 
 }
 
 glm::vec3 getNormal(IntersectionPoint iPoint) {
-    glm::vec3 normal;
-    const SphereIO *sphereData;
+    glm::vec3 normal(0);
     switch (iPoint.object->type) {
-        case SPHERE_OBJ:
-            sphereData = (SphereIO *) iPoint.object->data;
+        case SPHERE_OBJ: {
+            const SphereIO *sphereData = (SphereIO *) iPoint.object->data;
             normal = iPoint.position - glm::vec3(sphereData->origin[0], sphereData->origin[1], sphereData->origin[2]);
+        }
             break;
-        case POLYSET_OBJ:
+        case POLYSET_OBJ: {
             const PolygonIO *poly = iPoint.polyIntersect.poly;
             glm::vec3 vert0Pos(poly->vert[0].pos[0], poly->vert[0].pos[1], poly->vert[0].pos[2]);
             glm::vec3 vert1Pos(poly->vert[1].pos[0], poly->vert[1].pos[1], poly->vert[1].pos[2]);
@@ -103,6 +103,7 @@ glm::vec3 getNormal(IntersectionPoint iPoint) {
             } else {
                 normal = glm::cross(vert1Pos - vert0Pos, vert2Pos - vert0Pos);
             }
+        }
             break;
     }
     return glm::normalize(normal);
@@ -115,7 +116,7 @@ IntersectionPoint intersectScene(
         RayTracerParams &scene_params) {
     IntersectionPoint finalPoint;
     if (scene_params.useAcceleration) {
-        glm::vec3 inter;
+        glm::vec3 inter(0);
         for (ObjBound *bound : scene_data.boundBoxes) {
             IntersectionPoint currPoint;
             if (bound->mightIntersect(vec, origin, inter)) {

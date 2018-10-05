@@ -38,29 +38,6 @@ void render(SceneData& scene_data, RayTracerParams& scene_params) {
     scene_data.image = new float[sizeof(float) * scene_params.IMAGE_HEIGHT * scene_params.IMAGE_WIDTH * 3];
 
     jacksRenderScene(scene_data, scene_params);
-/*
-	CImage imageObj;
-	imageObj.Create(IMAGE_WIDTH, IMAGE_HEIGHT, 24);
-	BYTE* imagePtr = (BYTE*)imageObj.GetBits();
-	int pitch = imageObj.GetPitch();
-
-	for (int j = 0; j < IMAGE_HEIGHT; j++) {
-		for (int i = 0; i < IMAGE_WIDTH; i++) {
-			glm::vec3 pixel = getPixel(i, IMAGE_HEIGHT - j - 1);
-			*(imagePtr + pitch * j + i * 3 + 0) = (BYTE)(min(pixel.b * 255, 255.0f));
-			*(imagePtr + pitch * j + i * 3 + 1) = (BYTE)(min(pixel.g * 255, 255.0f));
-			*(imagePtr + pitch * j + i * 3 + 2) = (BYTE)(min(pixel.r * 255, 255.0f));
-		}
-	}
-
-	imageObj.Save(fileName);
-
-	// Removed because it interferes with reading times
-	//wcout << "Image saved to " << fileName << endl;
-
-	imageObj.Destroy();
-	delete[] image;
-*/
     return;
 }
 

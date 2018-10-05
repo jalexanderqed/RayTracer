@@ -2,7 +2,7 @@
 
 glm::vec3 getBarycentricWeights(const glm::vec3 &p1, const glm::vec3 &p2, const glm::vec3 &p3,
                                 const glm::vec3 &point) {
-    glm::vec3 res;
+    glm::vec3 res(0);
     float sideLengths[3] = {glm::distance(p1, p2),
                             glm::distance(p2, p3),
                             glm::distance(p3, p1)};
@@ -28,7 +28,9 @@ glm::vec3 interpolateVecs(const glm::vec3 &p1, const glm::vec3 &p2, const glm::v
 }
 
 PolyIntersectionPoint::PolyIntersectionPoint() :
-        poly{NULL} {}
+        poly{NULL} {
+    position = glm::vec3(0);
+}
 
 PolyIntersectionPoint::PolyIntersectionPoint(const PolyIntersectionPoint &p) :
         position{p.position}, poly{p.poly} {}
@@ -37,7 +39,9 @@ PolyIntersectionPoint::PolyIntersectionPoint(const glm::vec3 &p, const PolygonIO
         position{p}, poly{py} {}
 
 IntersectionPoint::IntersectionPoint() :
-        object{NULL} {}
+        object{NULL} {
+    position = glm::vec3(0);
+}
 
 IntersectionPoint::IntersectionPoint(const glm::vec3 &p, const ObjIO *o, const PolyIntersectionPoint &pi) :
         position{p}, object{o}, polyIntersect{pi} {}

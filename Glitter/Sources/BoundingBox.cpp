@@ -27,7 +27,8 @@ void BoundingBox::apply(const BoundingBox& box) {
 }
 
 bool BoundingBox::intersect(const glm::vec3& vec, const glm::vec3& origin, glm::vec3& res) {
-	glm::vec3 closePlanes, farPlanes;
+	glm::vec3 closePlanes(0);
+	glm::vec3 farPlanes(0);
 	glm::vec3 invDir(1.0f / vec.x, 1.0f / vec.y, 1.0f / vec.z);
 	for (int i = 0; i < 3; i++) {
 		if (invDir[i] < 0) {

@@ -17,8 +17,8 @@
 // #include <stb_image.h>
 
 // Define Some Constants
-const int mWidth = 1600;
-const int mHeight = 1200;
+const int mWidth = 800;
+const int mHeight = 800;
 const float mNear = 0.1f;
 const float mFar = 1000.f;
 

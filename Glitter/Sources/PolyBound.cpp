@@ -118,7 +118,7 @@ IntersectionPoint PolyBound::intersect(const glm::vec3& vec, const glm::vec3& or
 	else {
 		/*list<DistPolyPair> intersects;
 		for (PolyBound* p : children) {
-			glm::vec3 interPoint;
+			glm::vec3 interPoint(0);
 			if (p->mightIntersect(vec, origin, interPoint)) {
 				DistPolyPair pair = { glm::distance2(interPoint, origin), p };
 				if (intersects.size() == 0) {
@@ -150,7 +150,7 @@ IntersectionPoint PolyBound::intersect(const glm::vec3& vec, const glm::vec3& or
 		
 		float finalDist = INFINITY;
 		for (PolyBound* p : children) {
-			glm::vec3 interPoint;
+			glm::vec3 interPoint(0);
 			if (p->mightIntersect(vec, origin, interPoint)) {
 				IntersectionPoint currPoint = p->intersect(vec, origin, scene_data, scene_params);
 				float currDist = currPoint.object == NULL ? 0 : glm::distance2(currPoint.position, origin);
