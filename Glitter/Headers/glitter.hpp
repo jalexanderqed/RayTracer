@@ -16,10 +16,4 @@
 //     #define STB_IMAGE_IMPLEMENTATION
 // #include <stb_image.h>
 
-// Define Some Constants
-const int mWidth = 800;
-const int mHeight = 800;
-const float mNear = 0.1f;
-const float mFar = 1000.f;
-
 #endif //~ Glitter Header
