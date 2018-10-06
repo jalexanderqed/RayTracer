@@ -34,7 +34,7 @@ namespace gl_code {
 
     void updatePosition(OpenglVars& vars);
 
-    void drawMainScene(Shader *shader);
+    void drawMainScene(Shader *shader, OpenglVars& vars);
 
     void renderShadowMaps(OpenglVars& vars);
 

@@ -5,7 +5,7 @@
 
 namespace gl_code {
 
-    OpenglVars* global_vars;
+    OpenglVars *global_vars;
 
     void init_vars(OpenglVars &vars) {
         global_vars = &vars;
@@ -59,7 +59,7 @@ namespace gl_code {
         vars.firstMouse = true;
     }
 
-    int gl_main_fun(OpenglVars &vars){
+    int gl_main_func(OpenglVars &vars) {
         // Load GLFW and Create a Window
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -97,9 +97,12 @@ namespace gl_code {
 
         float am = .05f;
 
-        vars.lights.push_back(Light(glm::vec3(-30, 30, -3), glm::vec3(am, am, am), glm::vec3(1, .1, .1), glm::vec3(1, .1, .1), 0));
-        vars.lights.push_back(Light(glm::vec3(0, 10, 3), glm::vec3(am, am, am), glm::vec3(.1, .1, 1), glm::vec3(.1, .1, 1), 1));
-        vars.lights.push_back(Light(glm::vec3(30, 30, -3), glm::vec3(am, am, am), glm::vec3(.1, 1, .1), glm::vec3(.1, 1, .1), 2));
+        vars.lights.push_back(
+                Light(glm::vec3(-30, 30, -3), glm::vec3(am, am, am), glm::vec3(1, .1, .1), glm::vec3(1, .1, .1), 0));
+        vars.lights.push_back(
+                Light(glm::vec3(0, 10, 3), glm::vec3(am, am, am), glm::vec3(.1, .1, 1), glm::vec3(.1, .1, 1), 1));
+        vars.lights.push_back(
+                Light(glm::vec3(30, 30, -3), glm::vec3(am, am, am), glm::vec3(.1, 1, .1), glm::vec3(.1, 1, .1), 2));
         vars.activeLights = 3;
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -108,16 +111,16 @@ namespace gl_code {
 
         // Create a sample shader that displays normal
         vars.fullShader = Shader(FileSystem::getPath("Shaders/geometry.vert.glsl").c_str(),
-                            FileSystem::getPath("Shaders/geometry.frag.glsl").c_str());
+                                 FileSystem::getPath("Shaders/geometry.frag.glsl").c_str());
         vars.shadowShader = Shader(FileSystem::getPath("Shaders/shadow_geometry.vert.glsl").c_str(),
-                              FileSystem::getPath("Shaders/shadow_geometry.frag.glsl").c_str(),
-                              FileSystem::getPath("Shaders/shadow_geometry.geom.glsl").c_str());
+                                   FileSystem::getPath("Shaders/shadow_geometry.frag.glsl").c_str(),
+                                   FileSystem::getPath("Shaders/shadow_geometry.geom.glsl").c_str());
         vars.ssaoShader = Shader(FileSystem::getPath("Shaders/geometry.vert.glsl").c_str(),
-                            FileSystem::getPath("Shaders/ssao_geometry.frag.glsl").c_str());
+                                 FileSystem::getPath("Shaders/ssao_geometry.frag.glsl").c_str());
         vars.ssdoShader = Shader(FileSystem::getPath("Shaders/geometry.vert.glsl").c_str(),
-                            FileSystem::getPath("Shaders/ssdo_geometry.frag.glsl").c_str());
+                                 FileSystem::getPath("Shaders/ssdo_geometry.frag.glsl").c_str());
         vars.depthShader = Shader(FileSystem::getPath("Shaders/pre_ssao_geometry.vert.glsl").c_str(),
-                             FileSystem::getPath("Shaders/pre_ssao_geometry.frag.glsl").c_str());
+                                  FileSystem::getPath("Shaders/pre_ssao_geometry.frag.glsl").c_str());
         /*mapShader = Shader(FileSystem::getPath("Shaders/map_geometry.vert.glsl").c_str(),
             FileSystem::getPath("Shaders/map_geometry.frag.glsl").c_str(),
             FileSystem::getPath("Shaders/shadow_geometry.geom.glsl").c_str());*/
@@ -148,7 +151,7 @@ namespace gl_code {
         glGenFramebuffers(1, &vars.ambPositionBuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, vars.ambPositionBuffer);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, vars.ambPositionTex, 0);
-        GLuint attachments[1] = { GL_COLOR_ATTACHMENT0 };
+        GLuint attachments[1] = {GL_COLOR_ATTACHMENT0};
         glDrawBuffers(1, attachments);
         glGenRenderbuffers(1, &vars.ambPositionRenderBuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, vars.ambPositionRenderBuffer);
@@ -160,7 +163,7 @@ namespace gl_code {
 
         //renderMainMap();
 
-        Shader* currentShader;
+        Shader *currentShader;
         // Rendering Loop
         while (glfwWindowShouldClose(mWindow) == false) {
             glfwPollEvents();
@@ -175,8 +178,7 @@ namespace gl_code {
                 renderDepthTex(vars);
                 currentShader->Use();
                 glUniform1f(glGetUniformLocation(currentShader->Program, "farClip"), vars.shadowFar);
-            }
-            else if (vars.renderMode == 1) {
+            } else if (vars.renderMode == 1) {
                 currentShader = &vars.ssaoShader;
                 renderDepthTex(vars);
                 currentShader->Use();
@@ -199,15 +201,19 @@ namespace gl_code {
             */
 
             for (int i = 0; i < vars.NUM_AMB_PROBES; i++) {
-                glUniform3fv(glGetUniformLocation(currentShader->Program, ("probes[" + to_string(i) + "]").c_str()), 1, glm::value_ptr(vars.ambProbes[i]));
+                glUniform3fv(glGetUniformLocation(currentShader->Program, ("probes[" + to_string(i) + "]").c_str()), 1,
+                             glm::value_ptr(vars.ambProbes[i]));
             }
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glm::mat4 projection = glm::perspective(glm::radians(vars.camera.Zoom), (GLfloat)vars.mWidth / (GLfloat)vars.mHeight, vars.mNear, vars.mFar);
+            glm::mat4 projection = glm::perspective(glm::radians(vars.camera.Zoom),
+                                                    (GLfloat) vars.mWidth / (GLfloat) vars.mHeight, vars.mNear,
+                                                    vars.mFar);
             glm::mat4 view = vars.camera.GetViewMatrix();
             glm::mat4 model = glm::mat4();
-            glUniformMatrix4fv(glGetUniformLocation(currentShader->Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+            glUniformMatrix4fv(glGetUniformLocation(currentShader->Program, "projection"), 1, GL_FALSE,
+                               glm::value_ptr(projection));
             glUniformMatrix4fv(glGetUniformLocation(currentShader->Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
             glUniform3fv(glGetUniformLocation(currentShader->Program, "pPos"), 1, glm::value_ptr(vars.camera.Position));
 
@@ -220,17 +226,21 @@ namespace gl_code {
             }
 
             vars.useTextures = (vars.renderMode == 0);
-            drawMainScene(currentShader);
+            drawMainScene(currentShader, vars);
 
             model = glm::mat4();
             for (int i = 0; i < vars.activeLights; i++) {
-                glUniformMatrix4fv(glGetUniformLocation(currentShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(glm::translate(model, vars.lights[i].getPos())));
+                glUniformMatrix4fv(glGetUniformLocation(currentShader->Program, "model"),
+                                   1,
+                                   GL_FALSE,
+                                   glm::value_ptr(glm::translate(model, vars.lights[i].getPos())));
                 RenderCube(*currentShader, vars);
             }
 
             // Flip Buffers and Draw
             glfwSwapBuffers(mWindow);
-        }   glfwTerminate();
+        }
+        glfwTerminate();
         return EXIT_SUCCESS;
     }
 
@@ -299,7 +309,7 @@ namespace gl_code {
         glClear(GL_DEPTH_BUFFER_BIT);
 
         vars.useTextures = true;
-        drawMainScene(&vars.mapShader);
+        drawMainScene(&vars.mapShader, vars);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
@@ -322,7 +332,8 @@ namespace gl_code {
     }
 
     void renderDepthTex(OpenglVars &vars) {
-        glm::mat4 projection = glm::perspective(glm::radians(vars.camera.Zoom), (GLfloat) vars.mWidth / (GLfloat) vars.mHeight, vars.mNear,
+        glm::mat4 projection = glm::perspective(glm::radians(vars.camera.Zoom),
+                                                (GLfloat) vars.mWidth / (GLfloat) vars.mHeight, vars.mNear,
                                                 vars.mFar);
         glm::mat4 view = vars.camera.GetViewMatrix();
         glm::mat4 model = glm::mat4();
@@ -337,7 +348,7 @@ namespace gl_code {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         vars.useTextures = false;
-        drawMainScene(&vars.depthShader);
+        drawMainScene(&vars.depthShader, vars);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         vars.useTextures = true;
@@ -410,7 +421,7 @@ namespace gl_code {
             glReadBuffer(GL_NONE);
             glClear(GL_DEPTH_BUFFER_BIT);
 
-            drawMainScene(&vars.shadowShader);
+            drawMainScene(&vars.shadowShader, vars);
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
@@ -526,16 +537,20 @@ namespace gl_code {
 
         if (vars.lightMoveMode) {
             if (vars.wPressed) {
-                vars.lights[vars.lightMoveInd].ProcessKeyboard(FORWARD, vars.speed * deltaTime, vars.camera.Front, vars.camera.Right);
+                vars.lights[vars.lightMoveInd].ProcessKeyboard(FORWARD, vars.speed * deltaTime, vars.camera.Front,
+                                                               vars.camera.Right);
             }
             if (vars.sPressed) {
-                vars.lights[vars.lightMoveInd].ProcessKeyboard(BACKWARD, vars.speed * deltaTime, vars.camera.Front, vars.camera.Right);
+                vars.lights[vars.lightMoveInd].ProcessKeyboard(BACKWARD, vars.speed * deltaTime, vars.camera.Front,
+                                                               vars.camera.Right);
             }
             if (vars.aPressed) {
-                vars.lights[vars.lightMoveInd].ProcessKeyboard(LEFT, vars.speed * deltaTime, vars.camera.Front, vars.camera.Right);
+                vars.lights[vars.lightMoveInd].ProcessKeyboard(LEFT, vars.speed * deltaTime, vars.camera.Front,
+                                                               vars.camera.Right);
             }
             if (vars.dPressed) {
-                vars.lights[vars.lightMoveInd].ProcessKeyboard(RIGHT, vars.speed * deltaTime, vars.camera.Front, vars.camera.Right);
+                vars.lights[vars.lightMoveInd].ProcessKeyboard(RIGHT, vars.speed * deltaTime, vars.camera.Front,
+                                                               vars.camera.Right);
             }
             vars.lights[vars.lightMoveInd].update(vars.fullShader);
         } else {
