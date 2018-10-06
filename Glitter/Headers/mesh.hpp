@@ -8,6 +8,8 @@
 #include <iostream>
 #include <vector>
 
+#include <assimp/types.h>
+
 using namespace std;
 // GL Includes
 #include <glad/glad.h>
