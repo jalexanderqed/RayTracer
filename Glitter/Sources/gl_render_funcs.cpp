@@ -425,7 +425,7 @@ namespace gl_code {
         glm::mat4 model;
         model = glm::scale(model, glm::vec3(0.05f));    // The sponza model is too big, scale it first
         glUniformMatrix4fv(glGetUniformLocation(currentShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        vars.sampleModel.Draw(*currentShader);
+        vars.sampleModel.Draw(*currentShader, vars);
     }
 
     // RenderCube() Renders a 1x1 3D cube in NDC.

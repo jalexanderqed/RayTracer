@@ -11,6 +11,7 @@
 #include <memory>
 #include <vector>
 #include <random>
+#include <time.h>
 
 #include "opengl_structs.h"
 #include "opengl_const.h"
