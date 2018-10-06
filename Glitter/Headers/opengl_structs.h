@@ -6,9 +6,9 @@
 #define GLITTER_OPENGL_STRUCTS_H
 
 #include <glm/glm.hpp>
+#include "model.hpp"
 #include "light.hpp"
 #include "shader.hpp"
-#include "model.hpp"
 #include "camera.hpp"
 #include <memory>
 #include <vector>

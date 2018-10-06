@@ -4,6 +4,10 @@
 
 #include "model.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#include "opengl_structs.h"
+
 namespace gl_code {
 
     Model::Model() {}
@@ -173,8 +177,12 @@ namespace gl_code {
         filename = directory + '/' + filename;
         GLuint textureID;
         glGenTextures(1, &textureID);
-        int width, height;
-        unsigned char *image = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+        int width, height, chan;
+        unsigned char *image = stbi_load(filename.c_str(), &width, &height, &chan, gamma ? 4 : 3);
+        if(image == NULL){
+            std::cerr << stbi_failure_reason() << std::endl;
+            return -1;
+        }
         // Assign texture to ID
         glBindTexture(GL_TEXTURE_2D, textureID);
         glTexImage2D(GL_TEXTURE_2D, 0, gamma ? GL_SRGB : GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -186,7 +194,7 @@ namespace gl_code {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glBindTexture(GL_TEXTURE_2D, 0);
-        SOIL_free_image_data(image);
+        stbi_image_free(image);
         return textureID;
     }
 

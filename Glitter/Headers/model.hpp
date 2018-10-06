@@ -19,10 +19,11 @@ using namespace std;
 #include <assimp/postprocess.h>
 #include <assimp/types.h>
 
-#include "opengl_structs.h"
 #include "mesh.hpp"
 
 namespace gl_code {
+
+    struct OpenglVars;
 
     GLint TextureFromFile(const char *path, string directory, bool gamma = false);
 
