@@ -175,12 +175,16 @@ namespace gl_code {
         //Generate texture ID and load texture data
         string filename = string(path);
         filename = directory + '/' + filename;
+        while(filename.find('\\') != string::npos){
+            int pos = filename.find('\\');
+            filename.replace(pos, 1, "/");
+        }
         GLuint textureID;
         glGenTextures(1, &textureID);
         int width, height, chan;
         unsigned char *image = stbi_load(filename.c_str(), &width, &height, &chan, gamma ? 4 : 3);
         if(image == NULL){
-            std::cerr << stbi_failure_reason() << std::endl;
+            std::cerr << stbi_failure_reason() << " " << filename << std::endl;
             return -1;
         }
         // Assign texture to ID
