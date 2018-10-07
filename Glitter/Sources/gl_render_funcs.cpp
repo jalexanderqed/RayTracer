@@ -81,13 +81,11 @@ namespace gl_code {
         fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
 
         cout << "Mouse to rotate, WASD to move"
-             << "\n(I removed the click-and-drag rotation)"
              << "\n\n\t- Press L to switch to light movement mode"
              << "\n\t\tWhile in this mode, press SPACE to switch lights"
              << "\n\t\tWASD will move the lights according to the player's orientation"
              << "\n\n\t- Press M to switch between SSAO and full rendering mode"
-             << "\n\nI did not implement SSDO because I ran into a bug with GLSL"
-             << "\n(seriously, I can demonstrate it), and decided enough was enough." << endl;
+             << std::endl;
 
         // Set callback functions
         glfwSetKeyCallback(mWindow, key_callback);
@@ -125,20 +123,28 @@ namespace gl_code {
             FileSystem::getPath("Shaders/map_geometry.frag.glsl").c_str(),
             FileSystem::getPath("Shaders/shadow_geometry.geom.glsl").c_str());*/
 
+        cout << "About to load model" << endl;
         // Load a model from obj file
         vars.sampleModel = Model(FileSystem::getPath("Resources/crytek_sponza/sponza.obj").c_str());
+        cout << "Loaded model" << endl;
 
         vars.fullShader.Use();
         for (int i = 0; i < vars.activeLights; i++) {
             vars.lights[i].update(vars.fullShader);
         }
 
+        cout << "Updated lights" << endl;
+
         for (int i = 0; i < vars.NUM_LIGHTS; i++) {
+            vars.shadowMaps.push_back(0);
+            vars.shadowFrameBuffers.push_back(0);
             glGenTextures(1, &vars.shadowMaps[i]);
             glGenFramebuffers(1, &vars.shadowFrameBuffers[i]);
         }
+        cout << "Set up shadow maps" << endl;
 
         setupAmbProbes(vars);
+        cout << "Set up amb probes" << endl;
 
         glGenTextures(1, &vars.ambPositionTex);
         glBindTexture(GL_TEXTURE_2D, vars.ambPositionTex);
@@ -154,14 +160,19 @@ namespace gl_code {
         GLuint attachments[1] = {GL_COLOR_ATTACHMENT0};
         glDrawBuffers(1, attachments);
         glGenRenderbuffers(1, &vars.ambPositionRenderBuffer);
+        cout << "m" << endl;
         glBindRenderbuffer(GL_RENDERBUFFER, vars.ambPositionRenderBuffer);
         glRenderbufferStorageEXT(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, vars.mWidth, vars.mHeight);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, vars.ambPositionRenderBuffer);
+        cout << "a" << endl;
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             std::cout << "GBuffer Framebuffer not complete!" << std::endl;
+        std::cout << "GBuffer Framebuffer complete" << std::endl;
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         //renderMainMap();
+
+        cout << "Reached rendering loop" << endl;
 
         Shader *currentShader;
         // Rendering Loop

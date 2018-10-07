@@ -85,5 +85,5 @@ void main()
 	color += vec4(pointLightContrib(pointLights[0], shadowMap0, norm, eyeDir, wFragPos), 1);
 	color += vec4(pointLightContrib(pointLights[1], shadowMap1, norm, eyeDir, wFragPos), 1);
 	color += vec4(pointLightContrib(pointLights[2], shadowMap2, norm, eyeDir, wFragPos), 1);
-	color += ambientStrength * vec3(texture(texture_diffuse1, TexCoords)) * calcOcclusion(norm);
+	color += vec4(ambientStrength * calcOcclusion(norm) * vec3(texture(texture_diffuse1, TexCoords)), 1);
 }
