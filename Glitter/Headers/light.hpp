@@ -4,14 +4,16 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "shader.hpp"
-#include "camera.hpp"
 
 #include <string>
 #include <sstream>
 #include <iostream>
 
+#include "gl_const.h"
+
 namespace gl_code {
+
+    class Shader;
 
     class Light {
     private:
@@ -31,7 +33,7 @@ namespace gl_code {
 
         glm::vec3 getPos();
 
-        void ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime, glm::vec3 front, glm::vec3 right);
+        void ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime);
     };
 
 }  // namspace gl_code

@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glad/glad.h>
-#include "opengl_const.h"
+#include "opengl_structs.h"
 
 namespace gl_code {
 
@@ -67,14 +67,26 @@ namespace gl_code {
         // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
         void ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime) {
             GLfloat velocity = this->MovementSpeed * deltaTime;
-            if (direction == FORWARD)
-                this->Position += this->Front * velocity;
-            if (direction == BACKWARD)
-                this->Position -= this->Front * velocity;
-            if (direction == LEFT)
-                this->Position -= this->Right * velocity;
-            if (direction == RIGHT)
-                this->Position += this->Right * velocity;
+            switch(direction) {
+                case FORWARD:
+                    this->Position += this->Front * velocity;
+                    break;
+                case BACKWARD:
+                    this->Position -= this->Front * velocity;
+                    break;
+                case LEFT:
+                    this->Position -= this->Right * velocity;
+                    break;
+                case RIGHT:
+                    this->Position += this->Right * velocity;
+                    break;
+                case UP:
+                    this->Position += this->Up * velocity;
+                    break;
+                case DOWN:
+                    this->Position -= this->Up * velocity;
+                    break;
+            }
         }
 
         // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.

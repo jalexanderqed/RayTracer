@@ -4,6 +4,8 @@
 
 #include "light.hpp"
 
+#include "shader.hpp"
+
 namespace gl_code {
 
     Light::Light() :
@@ -39,16 +41,31 @@ namespace gl_code {
         return position;
     }
 
-    void Light::ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime, glm::vec3 front, glm::vec3 right) {
+    void Light::ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime) {
+        glm::vec3 front(1, 0, 0);
+        glm::vec3 right(0, 0, 1);
+        glm::vec3 up(0, 1, 0);
         GLfloat velocity = 3 * deltaTime;
-        if (direction == FORWARD)
-            this->position += front * velocity;
-        if (direction == BACKWARD)
-            this->position -= front * velocity;
-        if (direction == LEFT)
-            this->position -= right * velocity;
-        if (direction == RIGHT)
-            this->position += right * velocity;
+        switch (direction) {
+            case FORWARD:
+                this->position += front * velocity;
+                break;
+            case BACKWARD:
+                this->position -= front * velocity;
+                break;
+            case LEFT:
+                this->position -= right * velocity;
+                break;
+            case RIGHT:
+                this->position += right * velocity;
+                break;
+            case UP:
+                this->position += up * velocity;
+                break;
+            case DOWN:
+                this->position -= up * velocity;
+                break;
+        }
     }
 
 }  // namspace gl_code

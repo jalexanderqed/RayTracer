@@ -5,16 +5,22 @@
 #ifndef GLITTER_OPENGL_STRUCTS_H
 #define GLITTER_OPENGL_STRUCTS_H
 
+#include "glad/glad.h"
 #include <glm/glm.hpp>
-#include "model.hpp"
-#include "light.hpp"
-#include "shader.hpp"
-#include "camera.hpp"
 #include <memory>
 #include <vector>
 #include <random>
 
+#include "light.hpp"
+#include "gl_const.h"
+
 namespace gl_code {
+
+    class Shader;
+
+    class Camera;
+
+    class Model;
 
     struct OpenglVars {
         int mWidth;
@@ -24,8 +30,6 @@ namespace gl_code {
 
         int NUM_LIGHTS;
         int NUM_AMB_PROBES;
-
-        std::vector<glm::vec3> ambProbes;
 
         std::vector<Light> lights;
         int activeLights;
@@ -38,19 +42,15 @@ namespace gl_code {
         bool sPressed;
         bool dPressed;
         bool aPressed;
+        bool rPressed;
+        bool fPressed;
 
-        Shader fullShader;
-        Model sampleModel;
+        Shader *fullShader;
+        Model *sampleModel;
         std::vector<GLuint> shadowMaps;
         std::vector<GLuint> shadowFrameBuffers;
-        Shader shadowShader;
-        Shader ssaoShader;
-        Shader ssdoShader;
-        Shader depthShader;
-        Shader mapShader;
-        GLuint ambPositionTex;
-        GLuint ambPositionBuffer;
-        GLuint ambPositionRenderBuffer;
+        Shader *shadowShader;
+        Shader *mapShader;
 
         GLuint mainMapTex;
 
@@ -59,7 +59,7 @@ namespace gl_code {
 
         bool useTextures;
 
-        Camera camera;
+        Camera *camera;
 
         std::uniform_real_distribution<GLfloat> rands;
 
@@ -67,7 +67,7 @@ namespace gl_code {
 
         int renderMode;
 
-        std::vector<char *>shadowTexNames;
+        std::vector<char *> shadowTexNames;
 
         GLuint cubeVAO;
         GLuint cubeVBO;

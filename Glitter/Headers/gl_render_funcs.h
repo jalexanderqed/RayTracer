@@ -13,12 +13,11 @@
 #include <random>
 #include <time.h>
 
-#include "opengl_structs.h"
-#include "opengl_const.h"
 #include "light.hpp"
+#include "camera.hpp"
 #include "shader.hpp"
 #include "model.hpp"
-#include "camera.hpp"
+#include "opengl_structs.h"
 
 namespace gl_code {
 
@@ -39,10 +38,6 @@ namespace gl_code {
     void renderShadowMaps(OpenglVars& vars);
 
     void RenderCube(const Shader &shader, OpenglVars& vars);
-
-    void renderDepthTex(OpenglVars& vars);
-
-    void setupAmbProbes(OpenglVars& vars);
 
     void renderMainMap(OpenglVars& vars);
 

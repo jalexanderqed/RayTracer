@@ -34,26 +34,7 @@ float radius = 2.0f;
 
 float ambientStrength = 0.3f;
 
-float calcOcclusion(vec3 norm){
-	vec3 randomVec = normalize(vec3(probes[int(gl_FragCoord.x * gl_FragCoord.y * 1103515245 + 12345) % numProbes].xy, 0));
-	vec3 tan = normalize(randomVec - norm * dot(randomVec, norm));
-	vec3 bitan = cross(norm, tan);
-	mat3 tanTransform = mat3(tan, bitan, norm);
-	
-	float res = 0;
-	for(int i = 0; i < numProbes; i++){
-		vec3 probePos = tanTransform * probes[i];
-		probePos = viewFragPos.xyz + probePos * radius;
-		vec4 projProbePos = projection * vec4(probePos, 1.0f);
-		projProbePos /= projProbePos.w;
-		projProbePos.xyz = projProbePos.xyz * 0.5f + 0.5f;
-		float depth = texture(positionTex, projProbePos.xy).z;
-		res += (depth >= probePos.z + .1 ? 1.0 : 0.0);
-	}
-	return 1 - (res / numProbes);
-}
-
-vec3 pointLightContrib(PointLight light, samplerCube shadowMap, vec3 normal, vec3 eyeDir, vec3 wFragPos){
+vec3 pointLightContrib(PointLight light, vec3 normal, vec3 eyeDir, vec3 wFragPos){
 	vec3 outDir = normalize(light.position - wFragPos);
 	vec3 inDir = -outDir;
 	float diffuse = max(dot(normal, outDir), 0);
@@ -67,12 +48,7 @@ vec3 pointLightContrib(PointLight light, samplerCube shadowMap, vec3 normal, vec
 	vec3 diffColor = light.diffuse * diffuse * vec3(texture(texture_diffuse1, TexCoords));
 	vec3 specColor = light.specular * specular * vec3(texture(texture_specular1, TexCoords));
 
-	float shadowDepth = texture(shadowMap, inDir).r;
-	shadowDepth *= farClip;
-	float myDepth = length(wFragPos - light.position);
-	float shadow = myDepth - 0.1f < shadowDepth ? 1.0f : 0.0f;
-
-	return (diffColor + specColor) * atten * shadow;
+	return (diffColor + specColor) * atten;
 }
 
 void main()
@@ -82,8 +58,8 @@ void main()
 	vec3 eyeDir = normalize(pPos - wFragPos);
 	color = vec4(0, 0, 0, 0);
 
-	color += vec4(pointLightContrib(pointLights[0], shadowMap0, norm, eyeDir, wFragPos), 1);
-	color += vec4(pointLightContrib(pointLights[1], shadowMap1, norm, eyeDir, wFragPos), 1);
-	color += vec4(pointLightContrib(pointLights[2], shadowMap2, norm, eyeDir, wFragPos), 1);
-	color += vec4(ambientStrength * calcOcclusion(norm) * vec3(texture(texture_diffuse1, TexCoords)), 1);
+    color += vec4(pointLightContrib(pointLights[0], norm, eyeDir, wFragPos), 1);
+	color += vec4(pointLightContrib(pointLights[1], norm, eyeDir, wFragPos), 1);
+	color += vec4(pointLightContrib(pointLights[2], norm, eyeDir, wFragPos), 1);
+	color += vec4(ambientStrength * vec3(texture(texture_diffuse1, TexCoords)), 1);
 }
