@@ -104,12 +104,20 @@ namespace gl_code {
 
         float am = .05f;
 
+        /*
         lights.push_back(
                 Light(glm::vec3(-30, 30, -3), glm::vec3(am, am, am), glm::vec3(1, .1, .1), glm::vec3(1, .1, .1), 0));
         lights.push_back(
                 Light(glm::vec3(0, 10, 3), glm::vec3(am, am, am), glm::vec3(.1, .1, 1), glm::vec3(.1, .1, 1), 1));
         lights.push_back(
                 Light(glm::vec3(30, 30, -3), glm::vec3(am, am, am), glm::vec3(.1, 1, .1), glm::vec3(.1, 1, .1), 2));
+                */
+        lights.push_back(
+                Light(glm::vec3(-30, 30, -3), glm::vec3(am, am, am), glm::vec3(.5, .5, .5), glm::vec3(.5, .5, .5), 0));
+        lights.push_back(
+                Light(glm::vec3(-5, 15, 8), glm::vec3(am, am, am), glm::vec3(.5, .5, .5), glm::vec3(.5, .5, .5), 1));
+        lights.push_back(
+                Light(glm::vec3(0, 0, 0), glm::vec3(am, am, am), glm::vec3(.5, .5, .5), glm::vec3(.5, .5, .5), 2));
         activeLights = 3;
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -126,11 +134,15 @@ namespace gl_code {
             FileSystem::getPath("Shaders/map_geometry.frag.glsl").c_str(),
             FileSystem::getPath("Shaders/shadow_geometry.geom.glsl").c_str());*/
 
-        cout << "About to load model" << endl;
+        cout << "About to load models" << endl;
 
         // Load a model from obj file
-        sampleModel = new Model(FileSystem::getPath("Resources/crytek_sponza/sponza.obj").c_str());
-        cout << "Loaded model" << endl;
+        models.push_back(Model(FileSystem::getPath("Resources/nano_suit/nanosuit.obj").c_str()));
+        model_mats.push_back(glm::mat4(1));
+        models.push_back(Model(FileSystem::getPath("Resources/crytek_sponza/sponza.obj").c_str()));
+        model_mats.push_back(glm::scale(glm::mat4(1), glm::vec3(0.08f)));  // The sponza model is too big, scale it first
+
+        cout << "Loaded models" << endl;
 
         fullShader->Use();
         for (int i = 0; i < lights.size(); i++) {
@@ -197,80 +209,6 @@ namespace gl_code {
         }
         glfwTerminate();
         return EXIT_SUCCESS;
-    }
-
-    void RealTimeRenderer::renderMainMap() {
-        mapShader->Use();
-        float mapRes = 100.0f;
-        glViewport(0, 0, mapRes, mapRes);
-        glm::mat4 perspective = glm::perspective(glm::radians(90.0f), 1.0f, mNear, mFar);
-        glm::vec3 center(0, 10, 0);
-        glUniformMatrix4fv(glGetUniformLocation(mapShader->Program, "shadowMat[0]"), 1, GL_FALSE,
-                           glm::value_ptr(
-                                   perspective * glm::lookAt(center,
-                                                             center + glm::vec3(1, 0, 0),
-                                                             glm::vec3(0, -1, 0))
-                           ));
-        glUniformMatrix4fv(glGetUniformLocation(mapShader->Program, "shadowMat[1]"), 1, GL_FALSE,
-                           glm::value_ptr(
-                                   perspective * glm::lookAt(center,
-                                                             center + glm::vec3(-1, 0, 0),
-                                                             glm::vec3(0, -1, 0))
-                           ));
-        glUniformMatrix4fv(glGetUniformLocation(mapShader->Program, "shadowMat[2]"), 1, GL_FALSE,
-                           glm::value_ptr(
-                                   perspective * glm::lookAt(center,
-                                                             center + glm::vec3(0, 1, 0),
-                                                             glm::vec3(0, 0, 1))
-                           ));
-        glUniformMatrix4fv(glGetUniformLocation(mapShader->Program, "shadowMat[3]"), 1, GL_FALSE,
-                           glm::value_ptr(
-                                   perspective * glm::lookAt(center,
-                                                             center + glm::vec3(0, -1, 0),
-                                                             glm::vec3(0, 0, -1))
-                           ));
-        glUniformMatrix4fv(glGetUniformLocation(mapShader->Program, "shadowMat[4]"), 1, GL_FALSE,
-                           glm::value_ptr(
-                                   perspective * glm::lookAt(center,
-                                                             center + glm::vec3(0, 0, 1),
-                                                             glm::vec3(0, -1, 0))
-                           ));
-        glUniformMatrix4fv(glGetUniformLocation(mapShader->Program, "shadowMat[5]"), 1, GL_FALSE,
-                           glm::value_ptr(
-                                   perspective * glm::lookAt(center,
-                                                             center + glm::vec3(0, 0, -1),
-                                                             glm::vec3(0, -1, 0))
-                           ));
-        glUniform3fv(glGetUniformLocation(shadowShader->Program, "lightPos"), 1, glm::value_ptr(center));
-        glUniform1f(glGetUniformLocation(shadowShader->Program, "farClip"), shadowFar);
-
-        glGenTextures(1, &mainMapTex);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, mainMapTex);
-        for (GLuint i = 0; i < 6; i++) {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
-                         mapRes, mapRes, 0, GL_RGB, GL_FLOAT, NULL);
-            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-        }
-        GLuint mapFB;
-        glGenFramebuffers(1, &mapFB);
-        glBindFramebuffer(GL_FRAMEBUFFER, mapFB);
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mainMapTex, 0);
-        glDrawBuffer(GL_NONE);
-        glReadBuffer(GL_NONE);
-        glClear(GL_DEPTH_BUFFER_BIT);
-
-        useTextures = true;
-        drawMainScene(mapShader);
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-        glDrawBuffer(GL_BACK);
-        glReadBuffer(GL_BACK);
-        glViewport(0, 0, mWidth, mHeight);
     }
 
     void RealTimeRenderer::setupShadowMatrices(int lightIndex) {
@@ -352,10 +290,10 @@ namespace gl_code {
     }
 
     void RealTimeRenderer::drawMainScene(Shader *currentShader) {
-        glm::mat4 model(1);
-        model = glm::scale(model, glm::vec3(0.05f));    // The sponza model is too big, scale it first
-        glUniformMatrix4fv(glGetUniformLocation(currentShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        sampleModel->Draw(*currentShader, useTextures);
+        for(int i = 0; i < models.size(); i++){
+            glUniformMatrix4fv(glGetUniformLocation(currentShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model_mats[i]));
+            models[i].Draw(*currentShader, useTextures);
+        }
     }
 
     // RenderCube() Renders a 1x1 3D cube in NDC.

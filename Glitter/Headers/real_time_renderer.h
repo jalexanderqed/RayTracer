@@ -43,8 +43,6 @@ namespace gl_code {
 
         void RenderCube(const Shader &shader);
 
-        void renderMainMap();
-
         int mWidth;
         int mHeight;
         float mNear;
@@ -58,7 +56,10 @@ namespace gl_code {
         glm::vec3 testCoord;
 
         Shader *fullShader;
-        Model *sampleModel;
+
+        vector<Model> models;
+        vector<glm::mat4> model_mats;
+
         std::vector<GLuint> shadowMaps;
         std::vector<GLuint> shadowFrameBuffers;
         Shader *shadowShader;
