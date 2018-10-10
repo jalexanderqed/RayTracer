@@ -15,14 +15,12 @@
 #include "Timer.h"
 #include "util.h"
 
-#include "opengl_structs.h"
-#include "gl_render_funcs.h"
+#include "real_time_renderer.h"
+#include "real_time_renderer.h"
 
 int main(int argc, char *argv[]) {
-    gl_code::OpenglVars gl_vars;
-    gl_code::init_vars(gl_vars);
-
-    return gl_code::gl_main_func(gl_vars);
+    gl_code::RealTimeRenderer renderer;
+    return renderer.RenderLoop();
 
     RayTracerParams scene_params;
     scene_params.IMAGE_WIDTH = 250;
@@ -76,9 +74,9 @@ int main(int argc, char *argv[]) {
     renderTimer.stopTimer();
     fprintf(stderr, "Rendering time: %.5lf secs\n", renderTimer.getTime());
 
-    char *output_file;
+    string output_file;
     if (argc > 2) {
-        output_file = argv[2];
+        output_file = string(argv[2]);
     } else {
         output_file = "output.bmp";
     }

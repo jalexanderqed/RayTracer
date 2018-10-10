@@ -10,7 +10,6 @@
 
 #include <assimp/types.h>
 
-using namespace std;
 // GL Includes
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -37,24 +36,24 @@ namespace gl_code {
 
     struct Texture {
         GLuint id;
-        string type;
+        std::string type;
         aiString path;
     };
 
     class Mesh {
     public:
         /*  Mesh Data  */
-        vector<Vertex> vertices;
-        vector<GLuint> indices;
-        vector<Texture> textures;
+        std::vector<Vertex> vertices;
+        std::vector<GLuint> indices;
+        std::vector<Texture> textures;
         GLuint VAO;
 
         /*  Functions  */
         // Constructor
-        Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> textures);
+        Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures);
 
         // Render the mesh
-        void Draw(Shader shader, OpenglVars &vars);
+        void Draw(Shader shader, bool use_textures);
 
     private:
         /*  Render data  */

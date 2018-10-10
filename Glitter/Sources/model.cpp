@@ -6,7 +6,6 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include "opengl_structs.h"
 
 namespace gl_code {
 
@@ -20,9 +19,9 @@ namespace gl_code {
         this->loadModel(path);
     }
 
-    void Model::Draw(Shader shader, OpenglVars &vars) {
+    void Model::Draw(Shader shader, bool use_textures) {
         for (GLuint i = 0; i < this->meshes.size(); i++)
-            this->meshes[i].Draw(shader, vars);
+            this->meshes[i].Draw(shader, use_textures);
     }
 
     void Model::loadModel(string

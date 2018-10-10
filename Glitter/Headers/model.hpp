@@ -42,7 +42,7 @@ namespace gl_code {
         Model(string const &path, bool gamma = false);
 
         // Draws the model, and thus all its meshes
-        void Draw(Shader shader, OpenglVars &vars);
+        void Draw(Shader shader, bool use_textures);
 
     private:
         /*  Functions   */

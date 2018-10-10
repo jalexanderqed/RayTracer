@@ -31,7 +31,7 @@ glm::vec3 refract(const glm::vec3& out, const glm::vec3& normal, float oldIR, fl
 	return glm::normalize(ratio * in - (ratio * cosine + sqrt(1.0f - sin2)) * outNormal);
 }
 
-int write_img(char* file_name, SceneData scene_data, RayTracerParams scene_params){
+int write_img(const string& file_name, SceneData scene_data, RayTracerParams scene_params){
     unsigned char* img_ptr = new unsigned char[scene_params.IMAGE_WIDTH * scene_params.IMAGE_HEIGHT * 3];
     for (int y = 0; y < scene_params.IMAGE_HEIGHT; y++) {
         for (int x = 0; x < scene_params.IMAGE_WIDTH; x++) {
@@ -49,6 +49,6 @@ int write_img(char* file_name, SceneData scene_data, RayTracerParams scene_param
     return write_img(file_name, img_ptr, scene_params.IMAGE_WIDTH, scene_params.IMAGE_HEIGHT);
 }
 
-int write_img(char* file_name, unsigned char* image, int width, int height){
-	return stbi_write_bmp(file_name, width, height, 3, image);
+int write_img(const string& file_name, unsigned char* image, int width, int height){
+	return stbi_write_bmp(file_name.c_str(), width, height, 3, image);
 }

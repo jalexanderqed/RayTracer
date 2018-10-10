@@ -4,11 +4,12 @@
 
 #include "mesh.hpp"
 
-#include "opengl_structs.h"
-
 namespace gl_code {
 
-    Mesh::Mesh(vector <Vertex> vertices, vector <GLuint> indices, vector <Texture> textures) {
+    Mesh::Mesh(
+            std::vector <Vertex> vertices,
+            std::vector <GLuint> indices,
+            std::vector <Texture> textures) {
         this->vertices = vertices;
         this->indices = indices;
         this->textures = textures;
@@ -17,8 +18,8 @@ namespace gl_code {
         this->setupMesh();
     }
 
-    void Mesh::Draw(Shader shader, OpenglVars &vars) {
-        if (vars.useTextures) {
+    void Mesh::Draw(Shader shader, bool use_textures) {
+        if (use_textures) {
             // Bind appropriate textures
             GLuint diffuseNr = 1;
             GLuint specularNr = 1;
@@ -27,9 +28,9 @@ namespace gl_code {
             for (GLuint i = 0; i < this->textures.size(); i++) {
                 glActiveTexture(GL_TEXTURE0 + i); // Active proper texture unit before binding
                 // Retrieve texture number (the N in diffuse_textureN)
-                stringstream ss;
-                string number;
-                string name = this->textures[i].type;
+                std::stringstream ss;
+                std::string number;
+                std::string name = this->textures[i].type;
                 if (name == "texture_diffuse")
                     ss << diffuseNr++; // Transfer GLuint to stream
                 else if (name == "texture_specular")
@@ -51,7 +52,7 @@ namespace gl_code {
         glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
-        if (vars.useTextures) {
+        if (use_textures) {
             // Always good practice to set everything back to defaults once configured.
             for (GLuint i = 0; i < this->textures.size(); i++) {
                 glActiveTexture(GL_TEXTURE0 + i);

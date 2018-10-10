@@ -8,7 +8,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glad/glad.h>
-#include "opengl_structs.h"
+
+#include "gl_const.h"
 
 namespace gl_code {
 
