@@ -8,7 +8,7 @@
 #include "util.h"
 #include "Intersections.h"
 #include "SceneCamera.h"
-#include "Light.h"
+#include "light.hpp"
 #include "scene_io.h"
 #include <iostream>
 #include <vector>

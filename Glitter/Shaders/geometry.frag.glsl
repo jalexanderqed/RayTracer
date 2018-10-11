@@ -3,9 +3,7 @@ out vec4 color;
 
 struct PointLight{
 	vec3 position;
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
+	vec3 color;
 };
 
 uniform samplerCube shadowMap0;
@@ -45,8 +43,8 @@ vec3 pointLightContrib(PointLight light, vec3 normal, vec3 eyeDir, vec3 wFragPos
 	float lightDist = length(light.position - wFragPos) * .05;
 	float atten = 1.0f / (0.5f * lightDist + 0.5f * (lightDist * lightDist));
 
-	vec3 diffColor = light.diffuse * diffuse * vec3(texture(texture_diffuse1, TexCoords));
-	vec3 specColor = light.specular * specular * vec3(texture(texture_specular1, TexCoords));
+	vec3 diffColor = light.color * diffuse * vec3(texture(texture_diffuse1, TexCoords));
+	vec3 specColor = light.color * specular * vec3(texture(texture_specular1, TexCoords));
 
 	return (diffColor + specColor) * atten;
 }

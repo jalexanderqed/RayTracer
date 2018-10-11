@@ -10,6 +10,8 @@
 #include "filesystem.hpp"
 #include "shader.hpp"
 
+using shared_obj::Light;
+
 namespace gl_code {
     int RealTimeRenderer::activeLights = 0;
     bool RealTimeRenderer::lightMoveMode = false;
@@ -102,22 +104,12 @@ namespace gl_code {
         glfwSetScrollCallback(mWindow, scroll_callback);
         glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        float am = .05f;
-
-        /*
         lights.push_back(
-                Light(glm::vec3(-30, 30, -3), glm::vec3(am, am, am), glm::vec3(1, .1, .1), glm::vec3(1, .1, .1), 0));
+                Light(glm::vec3(-30, 30, -3), glm::vec3(.5, .5, .5), 0));
         lights.push_back(
-                Light(glm::vec3(0, 10, 3), glm::vec3(am, am, am), glm::vec3(.1, .1, 1), glm::vec3(.1, .1, 1), 1));
+                Light(glm::vec3(-5, 15, 8), glm::vec3(.5, .5, .5), 1));
         lights.push_back(
-                Light(glm::vec3(30, 30, -3), glm::vec3(am, am, am), glm::vec3(.1, 1, .1), glm::vec3(.1, 1, .1), 2));
-                */
-        lights.push_back(
-                Light(glm::vec3(-30, 30, -3), glm::vec3(am, am, am), glm::vec3(.5, .5, .5), glm::vec3(.5, .5, .5), 0));
-        lights.push_back(
-                Light(glm::vec3(-5, 15, 8), glm::vec3(am, am, am), glm::vec3(.5, .5, .5), glm::vec3(.5, .5, .5), 1));
-        lights.push_back(
-                Light(glm::vec3(0, 0, 0), glm::vec3(am, am, am), glm::vec3(.5, .5, .5), glm::vec3(.5, .5, .5), 2));
+                Light(glm::vec3(0, 0, 0), glm::vec3(.5, .5, .5), 2));
         activeLights = 3;
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -201,7 +193,7 @@ namespace gl_code {
                 glUniformMatrix4fv(glGetUniformLocation(currentShader->Program, "model"),
                                    1,
                                    GL_FALSE,
-                                   glm::value_ptr(glm::translate(model, lights[i].getPos())));
+                                   glm::value_ptr(glm::translate(model, lights[i].position())));
                 RenderCube(*currentShader);
             }
 
@@ -215,42 +207,42 @@ namespace gl_code {
         glm::mat4 perspective = glm::perspective(glm::radians(90.0f), 1.0f, shadowNear, shadowFar);
         glUniformMatrix4fv(glGetUniformLocation(shadowShader->Program, "shadowMat[0]"), 1, GL_FALSE,
                            glm::value_ptr(
-                                   perspective * glm::lookAt(lights[lightIndex].getPos(),
-                                                             lights[lightIndex].getPos() + glm::vec3(1, 0, 0),
+                                   perspective * glm::lookAt(lights[lightIndex].position(),
+                                                             lights[lightIndex].position() + glm::vec3(1, 0, 0),
                                                              glm::vec3(0, -1, 0))
                            ));
         glUniformMatrix4fv(glGetUniformLocation(shadowShader->Program, "shadowMat[1]"), 1, GL_FALSE,
                            glm::value_ptr(
-                                   perspective * glm::lookAt(lights[lightIndex].getPos(),
-                                                             lights[lightIndex].getPos() + glm::vec3(-1, 0, 0),
+                                   perspective * glm::lookAt(lights[lightIndex].position(),
+                                                             lights[lightIndex].position() + glm::vec3(-1, 0, 0),
                                                              glm::vec3(0, -1, 0))
                            ));
         glUniformMatrix4fv(glGetUniformLocation(shadowShader->Program, "shadowMat[2]"), 1, GL_FALSE,
                            glm::value_ptr(
-                                   perspective * glm::lookAt(lights[lightIndex].getPos(),
-                                                             lights[lightIndex].getPos() + glm::vec3(0, 1, 0),
+                                   perspective * glm::lookAt(lights[lightIndex].position(),
+                                                             lights[lightIndex].position() + glm::vec3(0, 1, 0),
                                                              glm::vec3(0, 0, 1))
                            ));
         glUniformMatrix4fv(glGetUniformLocation(shadowShader->Program, "shadowMat[3]"), 1, GL_FALSE,
                            glm::value_ptr(
-                                   perspective * glm::lookAt(lights[lightIndex].getPos(),
-                                                             lights[lightIndex].getPos() + glm::vec3(0, -1, 0),
+                                   perspective * glm::lookAt(lights[lightIndex].position(),
+                                                             lights[lightIndex].position() + glm::vec3(0, -1, 0),
                                                              glm::vec3(0, 0, -1))
                            ));
         glUniformMatrix4fv(glGetUniformLocation(shadowShader->Program, "shadowMat[4]"), 1, GL_FALSE,
                            glm::value_ptr(
-                                   perspective * glm::lookAt(lights[lightIndex].getPos(),
-                                                             lights[lightIndex].getPos() + glm::vec3(0, 0, 1),
+                                   perspective * glm::lookAt(lights[lightIndex].position(),
+                                                             lights[lightIndex].position() + glm::vec3(0, 0, 1),
                                                              glm::vec3(0, -1, 0))
                            ));
         glUniformMatrix4fv(glGetUniformLocation(shadowShader->Program, "shadowMat[5]"), 1, GL_FALSE,
                            glm::value_ptr(
-                                   perspective * glm::lookAt(lights[lightIndex].getPos(),
-                                                             lights[lightIndex].getPos() + glm::vec3(0, 0, -1),
+                                   perspective * glm::lookAt(lights[lightIndex].position(),
+                                                             lights[lightIndex].position() + glm::vec3(0, 0, -1),
                                                              glm::vec3(0, -1, 0))
                            ));
         glUniform3fv(glGetUniformLocation(shadowShader->Program, "lightPos"), 1,
-                     glm::value_ptr(lights[lightIndex].getPos()));
+                     glm::value_ptr(lights[lightIndex].position()));
         glUniform1f(glGetUniformLocation(shadowShader->Program, "farClip"), shadowFar);
     }
 

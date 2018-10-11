@@ -11,6 +11,8 @@
 
 //#define DEBUG
 
+using shared_obj::Light;
+
 const glm::vec3 BACK_COLOR(0);
 
 vector<Light> lights;
@@ -153,14 +155,14 @@ glm::vec3 calcAllLights(const IntersectionPoint &iPoint,
         glm::vec3 dirToLight(0);
         float dist2;
 
-        switch (l.sceneLight->type) {
+        switch (l.light_type()) {
             case SPOT_LIGHT:
             case POINT_LIGHT:
-                dirToLight = l.position - iPoint.position;
+                dirToLight = l.position() - iPoint.position;
                 dist2 = glm::length2(dirToLight);
                 break;
             case DIRECTIONAL_LIGHT:
-                dirToLight = -1.0f * l.direction;
+                dirToLight = -1.0f * l.direction();
                 break;
         }
 
@@ -171,13 +173,11 @@ glm::vec3 calcAllLights(const IntersectionPoint &iPoint,
                                               scene_data,
                                               scene_params);
         MaterialIO ipMaterial;
-        glm::vec3 seenColor = l.color;
-        int count = 0;
+        glm::vec3 seenColor = l.color();
         while (!(ip.object == NULL ||
                  (ipMaterial = getMaterial(ip, scene_data, scene_params)).ktran < scene_params.EPSILON ||
-                 (l.sceneLight->type != DIRECTIONAL_LIGHT &&
-                  glm::distance2(ip.position, l.position) > dist2))) {
-            count++;
+                 (l.light_type() != DIRECTIONAL_LIGHT &&
+                  glm::distance2(ip.position, l.position()) > dist2))) {
             glm::vec3 objColor(ipMaterial.diffColor[0],
                                ipMaterial.diffColor[1],
                                ipMaterial.diffColor[2]);
@@ -191,21 +191,12 @@ glm::vec3 calcAllLights(const IntersectionPoint &iPoint,
         }
 
         if (ip.object == NULL ||
-            (l.sceneLight->type != DIRECTIONAL_LIGHT &&
-             glm::distance2(ip.position, l.position) > dist2) ||
+            (l.light_type() != DIRECTIONAL_LIGHT &&
+             glm::distance2(ip.position, l.position()) > dist2) ||
             ipMaterial.ktran > scene_params.EPSILON) {
-            if (l.color[0] > 0.5) {
-                scene_data.red_counted++;
-            }
-            if (l.color[1] > 0.5) {
-                scene_data.green_counted++;
-            }
-            if (l.color[2] > 0.5) {
-                scene_data.blue_counted++;
-            }
             glm::vec3 light_contrib = lightContrib(seenColor, normal, inVec, dirToLight,
-                                                   l.sceneLight->type == DIRECTIONAL_LIGHT ? -1 : glm::distance(
-                                                           l.position, ip.position),
+                                                   l.light_type() == DIRECTIONAL_LIGHT ? -1 : glm::distance(
+                                                           l.position(), ip.position),
                                                    diffuse, specular, shiny, interMaterial.ktran);
             color += light_contrib;
         }

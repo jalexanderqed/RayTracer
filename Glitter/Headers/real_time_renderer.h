@@ -51,7 +51,7 @@ namespace gl_code {
         int NUM_LIGHTS;
         int NUM_AMB_PROBES;
 
-        std::vector<Light> lights;
+        std::vector<shared_obj::Light> lights;
 
         glm::vec3 testCoord;
 
