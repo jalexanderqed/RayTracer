@@ -11,7 +11,7 @@
 
 #include "gl_const.h"
 
-namespace gl_code {
+namespace shared_obj {
 
 // Default camera values
     const GLfloat YAW = -90.0f;
@@ -37,6 +37,8 @@ namespace gl_code {
         GLfloat MovementSpeed;
         GLfloat MouseSensitivity;
         GLfloat Zoom;
+
+        // TODO: provide a way to construct from ortho up and forward
 
         // Constructor with vectors
         Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
@@ -136,6 +138,6 @@ namespace gl_code {
         }
     };
 
-}  // namespace gl_code
+}  // namespace shared_obj
 
 #endif

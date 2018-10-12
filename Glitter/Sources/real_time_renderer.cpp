@@ -12,7 +12,7 @@
 
 using shared_obj::Light;
 
-namespace gl_code {
+namespace shared_obj {
     int RealTimeRenderer::activeLights = 0;
     bool RealTimeRenderer::lightMoveMode = false;
     int RealTimeRenderer::lightMoveInd = 0;
@@ -484,4 +484,4 @@ namespace gl_code {
         //camera->ProcessMouseScroll(yoffset);
     }
 
-}  // namespace gl_code
+}  // namespace shared_obj

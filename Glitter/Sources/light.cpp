@@ -6,24 +6,24 @@
 
 #include "shader.hpp"
 
-using gl_code::Shader;
+using shared_obj::Shader;
 
 namespace shared_obj {
 
-    Light::Light(const glm::vec3& pos, const glm::vec3& color, int ind) {
-            position_ = pos;
-            color_ = color;
-            index_ = ind;
-        type_ = POINT_LIGHT;
+    Light::Light(const glm::vec3 &pos, const glm::vec3 &color, size_t ind, LightType type) {
+        position_ = pos;
+        color_ = color;
+        index_ = ind;
+        type_ = type;
         myPre_ = "pointLights[" + std::to_string(index_) + "]";
     }
 
-    Light::Light(LightIO *l, int ind) {
-        position_ = glm::vec3(l->position[0], l->position[1], l->position[2]);
-        direction_ = glm::vec3(l->direction[0], l->direction[1], l->direction[2]);
-        color_ = glm::vec3(l->color[0], l->color[1], l->color[2]);
-        type_ = l->type;
+    Light::Light(const glm::vec3 &pos, glm::vec3 &direction, const glm::vec3 &color, size_t ind, LightType type) {
+        position_ = pos;
+        direction_ = direction;
+        color_ = color;
         index_ = ind;
+        type_ = type;
         myPre_ = "pointLights[" + std::to_string(index_) + "]";
     }
 

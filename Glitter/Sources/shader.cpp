@@ -4,9 +4,7 @@
 
 #include "shader.hpp"
 
-namespace gl_code {
-
-    Shader::Shader() {}
+namespace shared_obj {
 
     // Constructor generates the shader on the fly
     Shader::Shader(const GLchar *vertexPath, const GLchar *fragmentPath, const GLchar *geometryPath) {
@@ -115,4 +113,4 @@ namespace gl_code {
         }
     }
 
-}  // namespace gl_code
+}  // namespace shared_obj

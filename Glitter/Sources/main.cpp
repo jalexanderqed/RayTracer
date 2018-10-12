@@ -19,7 +19,7 @@
 #include "real_time_renderer.h"
 
 int main(int argc, char *argv[]) {
-    gl_code::RealTimeRenderer renderer;
+    shared_obj::RealTimeRenderer renderer;
     return renderer.RenderLoop();
 
     RayTracerParams scene_params;

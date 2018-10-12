@@ -4,12 +4,7 @@
 
 #include "model.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
-namespace gl_code {
-
-    Model::Model() {}
+namespace shared_obj {
 
     Model::Model(string
                  const &path,
@@ -158,7 +153,7 @@ namespace gl_code {
             }
             if (!skip) {   // If texture hasn't been loaded already, load it
                 Texture texture;
-                texture.id = TextureFromFile(str.C_Str(), this->directory);
+                texture = TextureFromFile(str.C_Str(), this->directory);
                 texture.type = typeName;
                 texture.path = str;
                 textures.push_back(texture);
@@ -170,25 +165,35 @@ namespace gl_code {
     }
 
 
-    GLint TextureFromFile(const char *path, string directory, bool gamma) {
+    Texture TextureFromFile(const char *path, string directory, bool gamma) {
         //Generate texture ID and load texture data
         string filename = string(path);
         filename = directory + '/' + filename;
+        Texture new_texture;
         while(filename.find('\\') != string::npos){
             int pos = filename.find('\\');
             filename.replace(pos, 1, "/");
         }
-        GLuint textureID;
-        glGenTextures(1, &textureID);
-        int width, height, chan;
-        unsigned char *image = stbi_load(filename.c_str(), &width, &height, &chan, gamma ? 4 : 3);
-        if(image == NULL){
+        glGenTextures(1, &new_texture.id);
+        new_texture.image = stbi_load(filename.c_str(),
+                &new_texture.image_width,
+                &new_texture.image_height,
+                &new_texture.image_channels,
+                gamma ? 4 : 3);
+        if(new_texture.image == NULL){
             std::cerr << stbi_failure_reason() << " " << filename << std::endl;
-            return -1;
+            new_texture.id = -1;
+            return new_texture;
         }
         // Assign texture to ID
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, gamma ? GL_SRGB : GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+        glBindTexture(GL_TEXTURE_2D, new_texture.id);
+        glTexImage2D(GL_TEXTURE_2D, 0, gamma ? GL_SRGB : GL_RGB,
+                new_texture.image_width,
+                new_texture.image_height,
+                0,
+                GL_RGB,
+                GL_UNSIGNED_BYTE,
+                new_texture.image);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         // Parameters
@@ -197,8 +202,7 @@ namespace gl_code {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glBindTexture(GL_TEXTURE_2D, 0);
-        stbi_image_free(image);
-        return textureID;
+        return new_texture;
     }
 
-}  // namespace gl_code
+}  // namespace shared_obj

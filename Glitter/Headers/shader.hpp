@@ -7,13 +7,11 @@
 #include <sstream>
 #include <iostream>
 
-namespace gl_code {
+namespace shared_obj {
 
     class Shader {
     public:
         GLuint Program;
-
-        Shader();
 
         // Constructor generates the shader on the fly
         Shader(const GLchar *vertexPath, const GLchar *fragmentPath, const GLchar *geometryPath = nullptr);
@@ -25,6 +23,6 @@ namespace gl_code {
         void checkCompileErrors(GLuint shader, std::string type, const char *file_path);
     };
 
-}  // namespace gl_code
+}  // namespace shared_obj
 
 #endif

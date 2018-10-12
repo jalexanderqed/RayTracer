@@ -18,7 +18,7 @@
 #include "shader.hpp"
 #include "model.hpp"
 
-namespace gl_code {
+namespace shared_obj {
 
     class RealTimeRenderer {
     public:
@@ -107,6 +107,6 @@ namespace gl_code {
         static GLfloat yoffset;
     };
 
-}  // namespace gl_code
+}  // namespace shared_obj
 
 #endif //GLITTER_GL_RENDER_FUNCS_H

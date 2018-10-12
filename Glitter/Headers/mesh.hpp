@@ -5,10 +5,14 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <memory>
 #include <iostream>
 #include <vector>
 
 #include <assimp/types.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 // GL Includes
 #include <glad/glad.h>
@@ -17,7 +21,7 @@
 
 #include "shader.hpp"
 
-namespace gl_code {
+namespace shared_obj {
 
     struct OpenglVars;
 
@@ -38,6 +42,16 @@ namespace gl_code {
         GLuint id;
         std::string type;
         aiString path;
+        unsigned char* image;
+        int image_width;
+        int image_height;
+        int image_channels;
+
+        ~Texture(){
+            if(image != nullptr) {
+                stbi_image_free(image);
+            }
+        }
     };
 
     class Mesh {
@@ -64,6 +78,6 @@ namespace gl_code {
         void setupMesh();
     };
 
-}  // namespace gl_code
+}  // namespace shared_obj
 
 #endif

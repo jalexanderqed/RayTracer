@@ -12,11 +12,13 @@
 #include "gl_const.h"
 #include "scene_io.h"
 
-namespace gl_code{
+namespace shared_obj{
     class Shader;
 }
 
 namespace shared_obj {
+
+    enum LightType {POINT_LIGHT, DIRECTIONAL_LIGHT, SPOT_LIGHT};
 
     class Light {
     private:
@@ -24,15 +26,15 @@ namespace shared_obj {
         glm::vec3 color_;
         LightType type_;
         glm::vec3 direction_;
-        int index_;
+        size_t index_;
         std::string myPre_;
 
     public:
-        Light(const glm::vec3& pos, const glm::vec3& color, int ind);
+        Light(const glm::vec3& pos, const glm::vec3& color, size_t ind, LightType type);
 
-        Light(LightIO *l, int ind);
+        Light(const glm::vec3& pos, glm::vec3& direction, const glm::vec3& color, size_t ind, LightType type);
 
-        void update(const gl_code::Shader &shader);
+        void update(const shared_obj::Shader &shader);
 
         const glm::vec3 &position() { return position_; }
 

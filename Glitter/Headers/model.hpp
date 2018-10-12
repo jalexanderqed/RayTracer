@@ -21,7 +21,7 @@ using namespace std;
 
 #include "mesh.hpp"
 
-namespace gl_code {
+namespace shared_obj {
 
     struct OpenglVars;
 
@@ -34,8 +34,6 @@ namespace gl_code {
         vector<Mesh> meshes;
         string directory;
         bool gammaCorrection;
-
-        Model();
 
         /*  Functions   */
         // Constructor, expects a filepath to a 3D model.
@@ -60,8 +58,8 @@ namespace gl_code {
     };
 
 
-    GLint TextureFromFile(const char *path, string directory, bool gamma);
+    Texture TextureFromFile(const char *path, string directory, bool gamma);
 
-}  // namespace gl_code
+}  // namespace shared_obj
 
 #endif

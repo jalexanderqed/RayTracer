@@ -31,6 +31,13 @@
 
 #include <stdio.h>
 
+#include "camera.hpp"
+#include "mesh.hpp"
+#include "model.hpp"
+#include "scene.h"
+
+read_cameraA(shared_obj::Scene &scene, FILE *fp);
+
 
     /* Definitions of fundamental types a la Heckbert	*/
     /*  in Glassner''s _Introduction_to_Ray_Tracing_	*/
@@ -70,11 +77,11 @@ enum LightType {POINT_LIGHT, DIRECTIONAL_LIGHT, SPOT_LIGHT};
 typedef struct LightIO {
     struct LightIO *next; /* Pointer to next light in linked list	*/
     enum LightType type;  /* Point, directional, or spot light		*/
-    
+
     Point position;	/* Position of a point light source		*/
     Vec direction;	/* Direction of a directional light source	*/
     Color color;	/* Color and intensity				*/
-    
+
     Flt dropOffRate;	/* For spot lights, 0 <= x <= 1.  See man pages */
     Flt cutOffAngle;	/* Angle at which spot light intensity is zero  */
 } LightIO;

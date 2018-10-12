@@ -4,7 +4,7 @@
 
 #include "mesh.hpp"
 
-namespace gl_code {
+namespace shared_obj {
 
     Mesh::Mesh(
             std::vector <Vertex> vertices,
@@ -99,4 +99,4 @@ namespace gl_code {
         glBindVertexArray(0);
     }
 
-}  // namespace gl_code
+}  // namespace shared_obj
