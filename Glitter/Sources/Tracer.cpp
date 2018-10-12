@@ -372,8 +372,10 @@ int renderLoop(SceneData *scene_d, RayTracerParams *scene_p, int threadNum) {
 
 void jacksRenderScene(SceneData &scene_data, RayTracerParams &scene_params) {
     SceneIO *scene = scene_data.sceneGeometry;
+    int light_count = 0;
     for (LightIO *light = scene->lights; light != NULL; light = light->next) {
-        lights.push_back(Light(light));
+        lights.push_back(Light(light, light_count));
+        light_count++;
     }
 
     if (scene_params.useAcceleration && scene_params.numThreads > 1) {

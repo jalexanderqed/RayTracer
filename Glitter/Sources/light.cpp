@@ -10,28 +10,21 @@ using gl_code::Shader;
 
 namespace shared_obj {
 
-    Light::Light() :
-            position_(glm::vec3(0)),
-            color_(glm::vec3(0)),
-            index_(0) {}
-
-    Light::Light(glm::vec3 pos, glm::vec3 color, int ind) :
-            position_(pos),
-            color_(color),
-            index_(ind) {
-        std::ostringstream pred;
-        pred << "pointLights[" << index_ << "]";
-        myPre_ = pred.str();
+    Light::Light(const glm::vec3& pos, const glm::vec3& color, int ind) {
+            position_ = pos;
+            color_ = color;
+            index_ = ind;
+        type_ = POINT_LIGHT;
+        myPre_ = "pointLights[" + std::to_string(index_) + "]";
     }
 
-    Light::Light(LightIO *l) {
+    Light::Light(LightIO *l, int ind) {
         position_ = glm::vec3(l->position[0], l->position[1], l->position[2]);
         direction_ = glm::vec3(l->direction[0], l->direction[1], l->direction[2]);
         color_ = glm::vec3(l->color[0], l->color[1], l->color[2]);
         type_ = l->type;
-        drop_off_rate_ = l->dropOffRate;
-        cut_off_angle_ = l->cutOffAngle;
-        index_ = 0;
+        index_ = ind;
+        myPre_ = "pointLights[" + std::to_string(index_) + "]";
     }
 
     void Light::update(const Shader &shader) {

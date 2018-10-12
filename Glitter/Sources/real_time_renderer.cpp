@@ -122,13 +122,9 @@ namespace gl_code {
         shadowShader = new Shader(FileSystem::getPath("Shaders/shadow_geometry.vert.glsl").c_str(),
                                   FileSystem::getPath("Shaders/shadow_geometry.frag.glsl").c_str(),
                                   FileSystem::getPath("Shaders/shadow_geometry.geom.glsl").c_str());
-        /*mapShader = Shader(FileSystem::getPath("Shaders/map_geometry.vert.glsl").c_str(),
-            FileSystem::getPath("Shaders/map_geometry.frag.glsl").c_str(),
-            FileSystem::getPath("Shaders/shadow_geometry.geom.glsl").c_str());*/
 
         cout << "About to load models" << endl;
 
-        // Load a model from obj file
         models.push_back(Model(FileSystem::getPath("Resources/nano_suit/nanosuit.obj").c_str()));
         model_mats.push_back(glm::mat4(1));
         models.push_back(Model(FileSystem::getPath("Resources/crytek_sponza/sponza.obj").c_str()));

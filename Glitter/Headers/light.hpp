@@ -26,15 +26,11 @@ namespace shared_obj {
         glm::vec3 direction_;
         int index_;
         std::string myPre_;
-        float drop_off_rate_;
-        float cut_off_angle_;
 
     public:
-        Light();
+        Light(const glm::vec3& pos, const glm::vec3& color, int ind);
 
-        Light(glm::vec3 pos, glm::vec3 color, int ind);
-
-        Light(LightIO *l);
+        Light(LightIO *l, int ind);
 
         void update(const gl_code::Shader &shader);
 
