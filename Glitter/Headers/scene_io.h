@@ -32,15 +32,17 @@
 #include <stdio.h>
 
 #include "camera.hpp"
+#include "material.h"
 #include "mesh.hpp"
 #include "model.hpp"
 #include "scene.h"
+#include "sphere.h"
 
 read_cameraA(shared_obj::Scene &scene, FILE *fp);
 
 
     /* Definitions of fundamental types a la Heckbert	*/
-    /*  in Glassner''s _Introduction_to_Ray_Tracing_	*/
+    /*  in Glassner's _Introduction_to_Ray_Tracing_	*/
 
 typedef float Flt;	    /* Inventor requires float not double!!	*/
 			    /*   Could be coerced to double with effort */
@@ -68,11 +70,6 @@ typedef struct CameraIO {
     Vec orthoUp;	/* Up direction, orthogonal to viewDirection	*/
     Flt verticalFOV;	/* Total vertical field of view, in radians	*/
 } CameraIO;
-
-
-    /* We allow point, directional, and spot lights. */
-
-enum LightType {POINT_LIGHT, DIRECTIONAL_LIGHT, SPOT_LIGHT};
 
 typedef struct LightIO {
     struct LightIO *next; /* Pointer to next light in linked list	*/

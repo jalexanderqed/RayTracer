@@ -19,64 +19,76 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "material.h"
 #include "shader.hpp"
 
 namespace shared_obj {
 
-    struct OpenglVars;
+  struct OpenglVars;
 
-    struct Vertex {
-        // Position
-        glm::vec3 Position;
-        // Normal
-        glm::vec3 Normal;
-        // TexCoords
-        glm::vec2 TexCoords;
-        // Tangent
-        glm::vec3 Tangent;
-        // Bitangent
-        glm::vec3 Bitangent;
-    };
+  enum VertexMaterialType{
+    TEXTURE,
+    MATERIAL,
+  };
 
-    struct Texture {
-        GLuint id;
-        std::string type;
-        aiString path;
-        unsigned char* image;
-        int image_width;
-        int image_height;
-        int image_channels;
+  struct Vertex {
+    // Position
+    glm::vec3 Position;
+    // Normal
+    glm::vec3 Normal;
+    // TexCoords
+    glm::vec2 TexCoords;
+    // Tangent
+    glm::vec3 Tangent;
+    // Bitangent
+    glm::vec3 Bitangent;
 
-        ~Texture(){
-            if(image != nullptr) {
-                stbi_image_free(image);
-            }
-        }
-    };
+    Material material;
+  };
 
-    class Mesh {
-    public:
-        /*  Mesh Data  */
-        std::vector<Vertex> vertices;
-        std::vector<GLuint> indices;
-        std::vector<Texture> textures;
-        GLuint VAO;
+  struct Texture {
+    GLuint id;
+    std::string type;
+    aiString path;
+    unsigned char* image;
+    int image_width;
+    int image_height;
+    int image_channels;
 
-        /*  Functions  */
-        // Constructor
-        Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures);
+    ~Texture(){
+      if(image != nullptr) {
+	stbi_image_free(image);
+      }
+    }
+  };
 
-        // Render the mesh
-        void Draw(Shader shader, bool use_textures);
+  class Mesh {
+  public:    
+    /*  Mesh Data  */
+    std::vector<Vertex> vertices;
+    std::vector<GLuint> indices;
+    std::vector<Texture> textures;
+    VertexMaterialType material_type;
+    GLuint VAO;
 
-    private:
-        /*  Render data  */
-        GLuint VBO, EBO;
+    /*  Functions  */
+    // Constructor
+    Mesh(std::vector<Vertex> vertices,
+	 std::vector<GLuint> indices,
+	 std::vector<Texture> textures,
+	 VertexMaterialType material_type);
 
-        /*  Functions    */
-        // Initializes all the buffer objects/arrays
-        void setupMesh();
-    };
+    // Render the mesh
+    void Draw(Shader shader, bool use_textures);
+
+  private:
+    /*  Render data  */
+    GLuint VBO, EBO;
+
+    /*  Functions    */
+    // Initializes all the buffer objects/arrays
+    void setupMesh();
+  };
 
 }  // namespace shared_obj
 

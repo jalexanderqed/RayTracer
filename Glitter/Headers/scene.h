@@ -10,6 +10,7 @@
 #include "camera.hpp"
 #include "light.hpp"
 #include "model.hpp"
+#include "sphere.h"
 
 namespace shared_obj {
 
@@ -17,6 +18,7 @@ namespace shared_obj {
         Camera camera;
         std::vector<Light> lights;
         std::vector<Model> models;
+        std::vector<Sphere> spheres;
     };
 
 }  // namespace shared_obj
