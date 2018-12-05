@@ -51,15 +51,6 @@ int main(int argc, char *argv[]) {
         cout << "Usage:\tBasicRayTracer.exe <input file> [<output file>]" << endl;
         exit(1);
     }
-/*
-	if (complexColorShaders || complexIntersectShaders) {
-		HRESULT success = texture1.Load(CA2W("earth.jpg"));
-		if (success != S_OK) {
-			cerr << "Error loading texture 1: " << success << endl;
-			exit(1);
-		}
-	}
- */
 
     scene_data.sceneName = argv[1];
     accelTimer.startTimer();

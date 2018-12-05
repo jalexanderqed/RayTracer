@@ -2,7 +2,7 @@
 #define INTERSECTIONS_H
 
 #include <glm/glm.hpp>
-#include <ray_tracer.h>
+#include "ray_tracer.h"
 #include "util.h"
 #include "scene_io.h"
 #include <iostream>

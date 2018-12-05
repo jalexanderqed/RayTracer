@@ -21,48 +21,13 @@
 
 #include "material.h"
 #include "shader.hpp"
+#include "geometry.h"
 
 namespace shared_obj {
 
   struct OpenglVars;
 
-  enum VertexMaterialType{
-    TEXTURE,
-    MATERIAL,
-  };
-
-  struct Vertex {
-    // Position
-    glm::vec3 Position;
-    // Normal
-    glm::vec3 Normal;
-    // TexCoords
-    glm::vec2 TexCoords;
-    // Tangent
-    glm::vec3 Tangent;
-    // Bitangent
-    glm::vec3 Bitangent;
-
-    Material material;
-  };
-
-  struct Texture {
-    GLuint id;
-    std::string type;
-    aiString path;
-    unsigned char* image;
-    int image_width;
-    int image_height;
-    int image_channels;
-
-    ~Texture(){
-      if(image != nullptr) {
-	stbi_image_free(image);
-      }
-    }
-  };
-
-  class Mesh {
+  class Mesh : public GeoObject {
   public:    
     /*  Mesh Data  */
     std::vector<Vertex> vertices;
@@ -77,6 +42,10 @@ namespace shared_obj {
 	 std::vector<GLuint> indices,
 	 std::vector<Texture> textures,
 	 VertexMaterialType material_type);
+
+    GeoObjectType obj_type() const override {
+      return MESH;
+    }
 
     // Render the mesh
     void Draw(Shader shader, bool use_textures);

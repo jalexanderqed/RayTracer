@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <algorithm>
 #include "tracer_structs.h"
-#include "scene_io.h"
 #include "ray_tracer.h"
 
 void setPixel(int x, int y, const glm::vec3& color, SceneData scene_data, RayTracerParams scene_params);

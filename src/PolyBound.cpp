@@ -3,20 +3,20 @@
 #define MAX_DEPTH 12
 #define MIN_SIZE 5
 
-void PolyBound::addPolygon(const PolygonIO* p) {
+void addPolygon(RefFace p); {
   polySet.push_back(p);
   boundBox.apply(BoundingBox(p));
 }
 
-PolyBound::~PolyBound() {
-  for (PolyBound* p : children) {
-    delete p;
+PolyBound::PolyBound(const Mesh* mesh, int d) : parentObject(mesh),
+						depth(d) {
+  for(int i = 0; i < mesh.indices.size(); i += 3){
+    RefFace face(mesh.vertices[mesh.indices[i]],
+		 mesh.vertices[mesh.indices[i + 1]],
+		 mesh.vertices[mesh.indices[i + 2]]);
+    addPolygon(face);
   }
 }
-
-PolyBound::PolyBound(const ObjIO* p, int d) : parentObject{ p },
-					      depth{ d }
-{ }
 
 void PolyBound::split() {
   if (depth >= MAX_DEPTH ||
@@ -29,7 +29,7 @@ void PolyBound::split() {
 			   { 0, 0, 0 },
 			   { 0, 0, 0 } };
 
-  for (const PolygonIO* poly : polySet) {
+  for (const RefFace poly : polySet) {
     BoundingBox polyBox(poly);
     for (int axis = 0; axis < 3; axis++) {
       if (polyBox.vMax[axis] < axisAverage[axis]) {
@@ -52,8 +52,10 @@ void PolyBound::split() {
 
   float scores[3];
   for (int axis = 0; axis < 3; axis++) {
-    scores[axis] = (((float)axisCounts[axis][1]) / minCross) +
-      (((float)max(axisCounts[axis][0], axisCounts[axis][2])) / min(axisCounts[axis][0], axisCounts[axis][2]));
+    scores[axis] =
+      (((float)axisCounts[axis][1]) / minCross) +
+      (((float)max(axisCounts[axis][0], axisCounts[axis][2])) /
+       min(axisCounts[axis][0], axisCounts[axis][2]));
   }
 
   int bestAxis = -1;
@@ -66,27 +68,27 @@ void PolyBound::split() {
     }
   }
 
-  PolyBound* less = new PolyBound(parentObject, depth + 1);
-  PolyBound* cross = new PolyBound(parentObject, depth + 1);
-  PolyBound* more = new PolyBound(parentObject, depth + 1);
-  for (const PolygonIO* poly : polySet) {
+  PolyBound less(parentObject, depth + 1);
+  PolyBound cross(parentObject, depth + 1);
+  PolyBound more(parentObject, depth + 1);
+  for (const RefFace& poly : polySet) {
     BoundingBox polyBox(poly);
     if (polyBox.vMax[bestAxis] < axisAverage[bestAxis]) {
-      less->addPolygon(poly);
+      less.addPolygon(poly);
     }
     else if (polyBox.vMin[bestAxis] > axisAverage[bestAxis]) {
-      more->addPolygon(poly);
+      more.addPolygon(poly);
     }
     else {
-      cross->addPolygon(poly);
+      cross.addPolygon(poly);
     }
   }
-  children.push_back(less);
-  children.push_back(cross);
-  children.push_back(more);
+  children.push_back(std::move(less));
+  children.push_back(std::move(cross));
+  children.push_back(std::move(more));
 
-  for (PolyBound* p : children) {
-    p->split();
+  for (PolyBound& c : children) {
+    c.split();
   }
 }
 
@@ -104,10 +106,13 @@ struct DistPolyPair {
   PolyBound* poly;
 };
 
-IntersectionPoint PolyBound::intersect(const glm::vec3& vec, const glm::vec3& origin, SceneData& scene_data, RayTracerParams& scene_params) {
+IntersectionPoint PolyBound::intersect(const glm::vec3& vec,
+				       const glm::vec3& origin,
+				       SceneData& scene_data,
+				       RayTracerParams& scene_params) {
   IntersectionPoint finalPoint;
   if (children.size() == 0) {
-    for (const PolygonIO* poly : polySet) {
+    for (const RefFace& poly : polySet) {
       PolyIntersectionPoint currPoint = intersectPoly(vec, origin, poly, scene_params);
       if (currPoint.poly != NULL && (finalPoint.object == NULL ||
 				     glm::distance2(currPoint.position, origin) < glm::distance2(finalPoint.position, origin))) {

@@ -14,12 +14,12 @@
 
 namespace shared_obj {
 
-    struct Scene {
-        Camera camera;
-        std::vector<Light> lights;
-        std::vector<Model> models;
-        std::vector<Sphere> spheres;
-    };
+  struct Scene {
+    Camera camera;
+    std::vector<Light> lights;
+    std::vector<Model> models;
+    std::vector<Sphere> spheres;
+  };
 
 }  // namespace shared_obj
 
